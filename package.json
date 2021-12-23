@@ -1,0 +1,236 @@
+{
+  "icon": "terraform.png",
+  "name": "azurerm-restapi",
+  "displayName": "Terraform azurerm-restapi Provider",
+  "description": "Autocompletion for Terraform azurerm-restapi Provider",
+  "version": "0.0.1",
+  "publisher": "ms-henglu",
+  "appInsightsKey": "885372d2-6f3c-499f-9d25-b8b219983a52",
+  "license": "MPL-2.0",
+  "preview": false,
+  "private": true,
+  "engines": {
+    "npm": "~6.X",
+    "node": "~14.X",
+    "vscode": "^1.55.0"
+  },
+  "qna": "https://discuss.hashicorp.com/c/terraform-core/terraform-editor-integrations/46",
+  "bugs": {
+    "url": "https://github.com/ms-henglu/azurerm-restapi-vscode/issues",
+    "email": "terraform-vscode@hashicorp.com"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other",
+    "Formatters",
+    "Linters"
+  ],
+  "keywords": [
+    "devops",
+    "terraform",
+    "hcl"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ms-henglu/azurerm-restapi-vscode.git"
+  },
+  "activationEvents": [
+    "onLanguage:terraform",
+    "onView:terraform-modules",
+    "workspaceContains:**/*.tf",
+    "onCommand:terraform.enableLanguageServer"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "languages": [
+      {
+        "id": "terraform",
+        "aliases": [
+          "Terraform",
+          "terraform"
+        ],
+        "extensions": [
+          ".tf"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [],
+    "snippets": [
+      {
+        "language": "terraform",
+        "path": "./snippets/terraform.json"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Terraform",
+      "properties": {
+        "azurerm-restapi.languageServer": {
+          "type": "object",
+          "description": "Language Server settings",
+          "properties": {
+            "external": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether an external language server binary should be launched."
+            },
+            "pathToBinary": {
+              "scope": "resource",
+              "type": "string",
+              "default": "",
+              "description": "Path to language server binary (optional)"
+            },
+            "args": {
+              "scope": "resource",
+              "type": "array",
+              "default": [
+                "serve"
+              ],
+              "description": "Arguments to pass to language server binary"
+            },
+            "maxNumberOfProblems": {
+              "scope": "resource",
+              "type": "number",
+              "default": 100,
+              "description": "Controls the maximum number of problems produced by the server."
+            },
+            "trace.server": {
+              "scope": "window",
+              "type": "string",
+              "enum": [
+                "off",
+                "messages",
+                "verbose"
+              ],
+              "default": "off",
+              "description": "Traces the communication between VS Code and the language server."
+            },
+            "requiredVersion": {
+              "type": "string",
+              "description": "The required version of the Language Server described as a semantic version string, for example '^2.0.1' or '> 1.0'. Defaults to latest available version."
+            }
+          },
+          "default": {
+            "external": true,
+            "pathToBinary": "",
+            "args": [
+              "serve"
+            ],
+            "maxNumberOfProblems": 100,
+            "trace.server": "off"
+          }
+        },
+        "azurerm-restapi-lsp.rootModules": {
+          "scope": "resource",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Per-workspace list of module directories for the language server to read"
+        },
+        "azurerm-restapi-lsp.terraformExecPath": {
+          "scope": "resource",
+          "type": "string",
+          "description": "Path to the Terraform binary"
+        },
+        "azurerm-restapi-lsp.terraformExecTimeout": {
+          "scope": "resource",
+          "type": "string",
+          "description": "Overrides Terraform execution timeout (e.g. 30s)"
+        },
+        "azurerm-restapi-lsp.terraformLogFilePath": {
+          "scope": "resource",
+          "type": "string",
+          "description": "Path to a file for Terraform executions to be logged into (TF_LOG_PATH) with support for variables (e.g. Timestamp, Pid, Ppid) via Go template syntax {{.VarName}}"
+        },
+        "azurerm-restapi-lsp.excludeRootModules": {
+          "scope": "resource",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Per-workspace list of module directories for the language server to exclude"
+        },
+        "azurerm-restapi-lsp.ignoreDirectoryNames": {
+          "scope": "resource",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Per-workspace list of directory names for the language server to ignore when indexing files"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "azurerm-restapi.enableLanguageServer",
+        "title": "Terraform azurerm-restapi Provider : Enable Language Server"
+      },
+      {
+        "command": "azurerm-restapi.disableLanguageServer",
+        "title": "Terraform azurerm-restapi Provider: Disable Language Server"
+      }
+    ],
+    "menus": {
+    },
+    "views": {
+    },
+    "viewsWelcome": [
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "pretest": "npm run compile && npm run lint",
+    "test": "node ./out/test/runTest.js",
+    "test:unit": "jest",
+    "package": "vsce package",
+    "prettier": "prettier \"**/*.+(js|json|ts)\"",
+    "format": "npm run prettier -- --write",
+    "check-format": "npm run prettier -- --check"
+  },
+  "dependencies": {
+    "@hashicorp/js-releases": "^1.4.0",
+    "@types/semver": "^7.3.4",
+    "openpgp": "^4.10.10",
+    "semver": "^7.3.5",
+    "short-unique-id": "^3.2.3",
+    "vscode-extension-telemetry": "^0.4.2",
+    "vscode-languageclient": "^7.0.0",
+    "vscode-uri": "^3.0.2",
+    "which": "^2.0.2",
+    "yauzl": "^2.10.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/glob": "^7.1.3",
+    "@types/jest": "^27.0.3",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^12.12.54",
+    "@types/openpgp": "^4.4.15",
+    "@types/vscode": "^1.52.0",
+    "@types/which": "^2.0.1",
+    "@types/yauzl": "^2.9.1",
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "@typescript-eslint/parser": "^3.9.0",
+    "chai": "^4.3.4",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "glob": "^7.1.6",
+    "jest": "^27.4.3",
+    "mocha": "^9.1.3",
+    "prettier": "^2.3.2",
+    "temp": "^0.9.4",
+    "ts-jest": "^27.1.0",
+    "typescript": "^3.9.7",
+    "vsce": "^1.93.0",
+    "vscode-test": "^1.5.2"
+  }
+}

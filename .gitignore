@@ -1,0 +1,10 @@
+out/
+node_modules/
+*.vsix
+.DS_Store
+.vscode-test
+npm-debug.log
+lsp/
+testFixture/.terraform.lock.hcl
+testFixture/.vscode
+.terraform/
