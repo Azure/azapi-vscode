@@ -2,6 +2,10 @@
 
 The Terraform azurerm-restapi Provider Visual Studio Code (VS Code) extension adds editing features like completion/hover/diagnositics for [terraform-provider-azurerm-restapi](https://github.com/Azure/terraform-provider-azurerm-restapi) Terraform files using the [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp).
 
+## Demo
+
+[![Video Demo](https://i9.ytimg.com/vi/mGLYP9rkWW8/mq1.jpg?sqp=CLyo1I4G&rs=AOn4CLCd7VRLVwSHzD7ZEbIwfGaJ-RDsdg)](https://youtu.be/mGLYP9rkWW8 "Terraform azurerm-restapi Provider Visual Studio Code Extension Demo")
+
 ## Features
 
 - Manages installation and updates of the [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp), exposing its features:
@@ -9,6 +13,29 @@ The Terraform azurerm-restapi Provider Visual Studio Code (VS Code) extension ad
 - Completion when input `body` in `azurerm-restapi` resources, limitation: it only works when use `jsonencode` function to build the JSON
 - Show hint when hover on `type`, `body` and properties defined inside `body`
 - Diagnostics to indicate schema errors as you type
+
+## Usage
+
+The [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp) hasn't been released, so it can only be tested
+in local for now.
+
+1. Clone [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp) to local
+2. Run `go install` under project folder
+3. Add the following configuration to vscode setting file.
+```
+   "azurerm-restapi.languageServer": {
+        "external": true,
+        "pathToBinary": "C:\\Users\\henglu\\go\\bin\\azurerm-restapi-lsp.exe",  //file path to language server
+        "args": [
+            "serve"
+        ],
+        "maxNumberOfProblems": 100,
+        "trace.server": "messages"
+    },
+```
+4. Clone this project to local
+5. Run `code .` to open this project in VSCode
+6. Press `F5`, it will open a new VSCode Window, you can test its features in it.
 
 
 ## Configuration
