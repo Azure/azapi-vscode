@@ -19,6 +19,7 @@ The Terraform azurerm-restapi Provider Visual Studio Code (VS Code) extension ad
 The [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp) hasn't been released, so it can only be tested
 in local for now.
 
+0. Prerequisites: golang >1.16, node >v14.0.0, npm > 6.0.0
 1. Clone [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp) to local
 2. Run `go install` under project folder
 3. Add the following configuration to vscode setting file.
@@ -34,8 +35,9 @@ in local for now.
     },
 ```
 4. Clone this project to local
-5. Run `code .` to open this project in VSCode
-6. Press `F5`, it will open a new VSCode Window, you can test its features in it.
+5. Run `npm install` to download dependencies
+6. Run `code .` to open this project in VSCode
+7. Press `F5`, it will open a new VSCode Window, you can test its features in it.
 
 
 ## Configuration
