@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { ClientHandler } from './clientHandler';
-import { GenerateBugReportCommand } from './commands/generateBugReport';
 import { DEFAULT_LS_VERSION, isValidVersionString } from './installer/detector';
 import { updateOrInstall } from './installer/updater';
 import { ServerPath } from './serverPath';
@@ -60,7 +59,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       languageServerUpdater.clear();
       return clientHandler.stopClient();
     }),
-    new GenerateBugReportCommand(context),
     vscode.workspace.onDidChangeConfiguration(async (event: vscode.ConfigurationChangeEvent) => {
       if (event.affectsConfiguration('terraform') || event.affectsConfiguration('azurerm-restapi-lsp')) {
         const reloadMsg = 'Reload VSCode window to apply language server changes';
