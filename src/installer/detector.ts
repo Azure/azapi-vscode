@@ -2,6 +2,8 @@ import { getRelease, Release } from '@hashicorp/js-releases';
 import * as semver from 'semver';
 import * as vscode from 'vscode';
 import { exec } from '../utils';
+import axios from 'axios'
+import { NewLineKind } from 'typescript';
 
 export const DEFAULT_LS_VERSION = 'latest';
 
@@ -20,6 +22,35 @@ export async function getLsVersion(binPath: string): Promise<string | undefined>
     // if it's old enough to not have the json version, we would be updating anyway
     return undefined;
   }
+}
+
+export async function getRequiredVersionRelease1(
+  versionString: string,
+): Promise<any> {
+  try {
+    const response = await axios.get('https://api.github.com/repos/ms-henglu/azurerm-restapi-testing-tool/releases');
+    if (response.status == 200 && response.data.length != 0){
+      if (versionString == "latest") {
+        return response.data[0]
+      } else {
+        for (var i in response.data) {
+          if (response.data[i].tag_name == versionString) {
+            return response.data[i]
+          }
+        }
+        console.log(`Found no matched release of azurerm-restapi-lsp, version: ${versionString}`);
+        vscode.window.showWarningMessage(`Found no matched release of azurerm-restapi-lsp, use latest`);
+        return response.data[0]
+      }
+    } else {
+      console.log(`Found no releases of azurerm-restapi-lsp`);
+    }
+    console.log(response);
+  } catch (err) {
+    console.log(err)
+  }
+  vscode.window.showWarningMessage(`Found no releases of azurerm-restapi-lsp`);
+  return null
 }
 
 export async function getRequiredVersionRelease(

@@ -8,10 +8,11 @@ import {
   DEFAULT_LS_VERSION,
   getLsVersion,
   getRequiredVersionRelease,
+  getRequiredVersionRelease1,
   isValidVersionString,
   pathExists,
 } from './detector';
-import { installTerraformLS } from './installer';
+import { installTerraformLS, installTerraformLS1 } from './installer';
 
 export async function updateOrInstall(
   lsVersion: string,
@@ -46,8 +47,10 @@ export async function updateOrInstall(
   // Get LS release information from hashicorp release site
   // Fall back to latest if not requested version not available
   let release: Release;
+  let release1: any
   try {
-    release = await getRequiredVersionRelease(versionString, extensionVersion, vscodeVersion);
+    release1 = await getRequiredVersionRelease1("v0.0.2")
+    //release = await getRequiredVersionRelease(versionString, extensionVersion, vscodeVersion);
   } catch (err) {
     console.log(
       `Error while finding Terraform language server release which satisfies range '${versionString}': ${err}`,
@@ -62,7 +65,8 @@ export async function updateOrInstall(
   if (lsPresent === false) {
     // LS is not present, need to download now in order to function
     // Install directly to production path and return normal execution
-    return installTerraformLS(lsPath.installPath(), release, extensionVersion, vscodeVersion, reporter);
+    return installTerraformLS1(lsPath.installPath(), release1, extensionVersion, vscodeVersion, reporter);
+   // return installTerraformLS(lsPath.installPath(), release, extensionVersion, vscodeVersion, reporter);
   }
 
   // We know there is an LS Present at this point, find out version if possible
@@ -70,7 +74,7 @@ export async function updateOrInstall(
   if (installedVersion === undefined) {
     console.log(`Currently installed Terraform language server is version '${installedVersion}`);
     // ls is present but too old to tell us the version, so need to update now
-    return installTerraformLS(lsPath.installPath(), release, extensionVersion, vscodeVersion, reporter);
+    return installTerraformLS1(lsPath.installPath(), release1, extensionVersion, vscodeVersion, reporter);
   }
 
   // We know there is an LS present and know the version, so decide whether to update or not
@@ -79,21 +83,22 @@ export async function updateOrInstall(
 
   // Already at the latest or specified version, no update needed
   // return to normal execution flow
-  if (semver.eq(release.version, installedVersion, { includePrerelease: true })) {
+  /*if (semver.eq(release.version, installedVersion, { includePrerelease: true })) {
     console.log(`Language server release is current: ${release.version}`);
     return;
-  }
+  }*/
+
 
   // We used to prompt for decision here, but effectively downgrading or upgrading
   // are the same operation so log decision and update
-  if (semver.gt(release.version, installedVersion, { includePrerelease: true })) {
+  /*if (semver.gt(release.version, installedVersion, { includePrerelease: true })) {
     // Upgrade
     console.log(`A newer language server release is available: ${release.version}`);
   } else if (semver.lt(release.version, installedVersion, { includePrerelease: true })) {
     // Downgrade
     console.log(`An older language server release is available: ${release.version}`);
-  }
+  }*/
 
   // Update indicated and user wants autoupdates, so update to latest or specified version
-  return installTerraformLS(lsPath.stgInstallPath(), release, extensionVersion, vscodeVersion, reporter);
+  return installTerraformLS1(lsPath.stgInstallPath(), release1, extensionVersion, vscodeVersion, reporter);
 }
