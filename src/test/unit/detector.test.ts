@@ -48,7 +48,7 @@ describe('terraform release detector', () => {
       version: version,
     };
 
-    const result = await getRequiredVersionRelease('0.24.0', '2.16.0', '1.66.0');
+    const result = await getRequiredVersionRelease('0.24.0');
 
     expect(result).toMatchObject(expected);
   });
@@ -95,7 +95,7 @@ describe('terraform release detector', () => {
       version: version,
     };
 
-    const result = await getRequiredVersionRelease('10000.24.0', '2.16.0', '1.66.0');
+    const result = await getRequiredVersionRelease('10000.24.0');
 
     expect(result).toMatchObject(expected);
     expect(getRelease).toBeCalledTimes(2);

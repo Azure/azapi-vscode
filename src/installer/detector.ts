@@ -1,9 +1,7 @@
-import { getRelease, Release } from '@hashicorp/js-releases';
 import * as semver from 'semver';
 import * as vscode from 'vscode';
 import { exec } from '../utils';
-import axios from 'axios'
-import { NewLineKind } from 'typescript';
+import axios from 'axios';
 
 export const DEFAULT_LS_VERSION = 'latest';
 
@@ -24,67 +22,36 @@ export async function getLsVersion(binPath: string): Promise<string | undefined>
   }
 }
 
-export async function getRequiredVersionRelease1(
-  versionString: string,
-): Promise<any> {
+export async function getRequiredVersionRelease(versionString: string): Promise<any> {
   try {
-    const response = await axios.get('https://api.github.com/repos/ms-henglu/azurerm-restapi-testing-tool/releases');
-    if (response.status == 200 && response.data.length != 0){
-      if (versionString == "latest") {
-        return response.data[0]
+    const response = await axios.get('https://api.github.com/repos/ms-henglu/azurerm-restapi-lsp/releases');
+    if (response.status == 200 && response.data.length != 0) {
+      if (versionString == 'latest') {
+        return response.data[0];
       } else {
-        for (var i in response.data) {
-          if (response.data[i].tag_name == versionString) {
-            return response.data[i]
+        const versions = [];
+        for (const i in response.data) {
+          versions.push(response.data[i].tag_name);
+        }
+        const matchedVersion = semver.maxSatisfying(versions, versionString);
+        for (const i in response.data) {
+          if (response.data[i].tag_name == matchedVersion) {
+            return response.data[i];
           }
         }
         console.log(`Found no matched release of azurerm-restapi-lsp, version: ${versionString}`);
         vscode.window.showWarningMessage(`Found no matched release of azurerm-restapi-lsp, use latest`);
-        return response.data[0]
+        return response.data[0];
       }
     } else {
       console.log(`Found no releases of azurerm-restapi-lsp`);
     }
     console.log(response);
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
   vscode.window.showWarningMessage(`Found no releases of azurerm-restapi-lsp`);
-  return null
-}
-
-export async function getRequiredVersionRelease(
-  versionString: string,
-  extensionVersion: string,
-  vscodeVersion: string,
-): Promise<Release> {
-  const userAgent = `Terraform-VSCode/${extensionVersion} VSCode/${vscodeVersion}`;
-
-  // Take the user requested version and query the hashicorp release site
-  try {
-    const release = await getRelease('azurerm-restapi-lsp', versionString, userAgent);
-    console.log(`Found Terraform language server version ${release.version} which satisfies range '${versionString}'`);
-    return release;
-  } catch (err) {
-    if (versionString === DEFAULT_LS_VERSION) {
-      throw err;
-    }
-
-    console.log(
-      `Error while finding Terraform language server release which satisfies range '${versionString}' and will reattempt with '${DEFAULT_LS_VERSION}': ${err}`,
-    );
-    vscode.window.showWarningMessage(
-      `No version matching ${versionString} found, searching for ${DEFAULT_LS_VERSION} instead`,
-    );
-  }
-
-  // User supplied version is either invalid or a version could not satisfy the range requested
-  // Attempt to find the latest release, as we need a LS to function
-  const release = await getRelease('azurerm-restapi-lsp', DEFAULT_LS_VERSION, userAgent);
-  console.log(
-    `Found Default Terraform language server version ${release.version} which satisfies range '${DEFAULT_LS_VERSION}'`,
-  );
-  return release;
+  return null;
 }
 
 export async function pathExists(filePath: string): Promise<boolean> {

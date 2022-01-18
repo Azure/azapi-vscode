@@ -66,9 +66,7 @@ export class ClientHandler {
 
     const serverOptions = await this.getServerOptions();
 
-    const documentSelector: DocumentSelector = [
-      { scheme: 'file', language: 'terraform' },
-    ];
+    const documentSelector: DocumentSelector = [{ scheme: 'file', language: 'terraform' }];
 
     const clientOptions: LanguageClientOptions = {
       documentSelector: documentSelector,
@@ -116,7 +114,7 @@ export class ClientHandler {
 
   private getInitializationOptions(commandPrefix: string) {
     const initializationOptions = {
-      commandPrefix
+      commandPrefix,
     };
     return initializationOptions;
   }
