@@ -11,6 +11,7 @@ import {
 } from '../../installer/detector';
 import { ServerPath } from '../../serverPath';
 import { lsPathMock } from './mocks/serverPath';
+import { Release } from '../../types';
 
 jest.mock('../../installer/detector');
 jest.mock('../../installer/installer');
@@ -42,16 +43,7 @@ describe('azurerm-restapi-lsp updater', () => {
 
       isValidVersionString.mockImplementationOnce(() => true);
       getRequiredVersionRelease.mockImplementationOnce(async () => {
-        return {
-          version: 'v0.0.1',
-          assets: [
-            {
-              downloadUrl:
-                'https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/v0.0.1/azurerm-restapi-lsp_0.0.1_windows_amd64.zip',
-              name: 'azurerm-restapi-lsp_0.0.1_windows_amd64.zip',
-            },
-          ],
-        };
+        return getRelease('v0.0.1');
       });
       await updateOrInstall('v0.0.1', lsPath, reporter);
 
@@ -81,16 +73,7 @@ describe('azurerm-restapi-lsp updater', () => {
 
       getLsVersion.mockImplementationOnce(async () => undefined);
       getRequiredVersionRelease.mockImplementationOnce(async () => {
-        return {
-          version: 'v0.0.1',
-          assets: [
-            {
-              downloadUrl:
-                'https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/v0.0.1/azurerm-restapi-lsp_0.0.1_windows_amd64.zip',
-              name: 'azurerm-restapi-lsp_0.0.1_windows_amd64.zip',
-            },
-          ],
-        };
+        return getRelease('v0.0.1');
       });
       await updateOrInstall('v0.0.1', lsPath, reporter);
 
@@ -119,16 +102,7 @@ describe('azurerm-restapi-lsp updater', () => {
 
       getLsVersion.mockImplementationOnce(async () => 'v0.0.1');
       getRequiredVersionRelease.mockImplementationOnce(async () => {
-        return {
-          version: 'v0.0.2',
-          assets: [
-            {
-              downloadUrl:
-                'https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/v0.0.2/azurerm-restapi-lsp_0.0.2_windows_amd64.zip',
-              name: 'azurerm-restapi-lsp_0.0.2_windows_amd64.zip',
-            },
-          ],
-        };
+        return getRelease('v0.0.2');
       });
       await updateOrInstall('v0.0.2', lsPath, reporter);
 
@@ -143,16 +117,7 @@ describe('azurerm-restapi-lsp updater', () => {
       pathExists.mockImplementationOnce(async () => true);
 
       getRequiredVersionRelease.mockImplementationOnce(async () => {
-        return {
-          version: 'v0.0.1',
-          assets: [
-            {
-              downloadUrl:
-                'https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/v0.0.1/azurerm-restapi-lsp_0.0.1_windows_amd64.zip',
-              name: 'azurerm-restapi-lsp_0.0.1_windows_amd64.zip',
-            },
-          ],
-        };
+        return getRelease('v0.0.1');
       });
       await updateOrInstall('v0.0.1', lsPath, reporter);
 
@@ -185,16 +150,7 @@ describe('azurerm-restapi-lsp updater', () => {
         .mockImplementationOnce(async () => true); // prod
 
       getRequiredVersionRelease.mockImplementationOnce(async () => {
-        return {
-          version: 'v0.0.1',
-          assets: [
-            {
-              downloadUrl:
-                'https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/v0.0.1/azurerm-restapi-lsp_0.0.1_windows_amd64.zip',
-              name: 'azurerm-restapi-lsp_0.0.1_windows_amd64.zip',
-            },
-          ],
-        };
+        return getRelease('v0.0.1');
       });
       await updateOrInstall('v0.0.1', lsPath, reporter);
 
@@ -257,16 +213,7 @@ describe('azurerm-restapi-lsp updater', () => {
 
       getLsVersion.mockImplementationOnce(async () => 'v0.0.1');
       getRequiredVersionRelease.mockImplementationOnce(async () => {
-        return {
-          version: 'v0.0.1',
-          assets: [
-            {
-              downloadUrl:
-                'https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/v0.0.1/azurerm-restapi-lsp_0.0.1_windows_amd64.zip',
-              name: 'azurerm-restapi-lsp_0.0.1_windows_amd64.zip',
-            },
-          ],
-        };
+        return getRelease('v0.0.1');
       });
 
       await updateOrInstall('v0.0.1', lsPath, reporter);
@@ -276,3 +223,23 @@ describe('azurerm-restapi-lsp updater', () => {
     });
   });
 });
+
+function getRelease(version: string): Release {
+  return {
+    version: version,
+    assets: [
+      {
+        downloadUrl: `https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/${version}/azurerm-restapi-lsp_${version}_windows_amd64.zip`,
+        name: `azurerm-restapi-lsp_${version}_windows_amd64.zip`,
+      },
+      {
+        downloadUrl: `https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/${version}/azurerm-restapi-lsp_${version}_darwin_amd64.zip`,
+        name: `azurerm-restapi-lsp_${version}_darwin_amd64.zip`,
+      },
+      {
+        downloadUrl: `https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/${version}/azurerm-restapi-lsp_${version}_linux_amd64.zip`,
+        name: `azurerm-restapi-lsp_${version}_windows_amd64.zip`,
+      },
+    ],
+  };
+}
