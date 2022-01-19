@@ -151,7 +151,6 @@
     "check-format": "npm run prettier -- --check"
   },
   "dependencies": {
-    "@hashicorp/js-releases": "^1.4.0",
     "@types/axios": "^0.14.0",
     "@types/semver": "^7.3.4",
     "@types/unzip-stream": "^0.3.1",
