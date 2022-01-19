@@ -2,6 +2,7 @@ import * as semver from 'semver';
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { ServerPath } from '../serverPath';
+import { Release } from '../types';
 import { config } from '../vscodeUtils';
 import {
   DEFAULT_LS_VERSION,
@@ -14,8 +15,6 @@ import { installTerraformLS } from './installer';
 
 export async function updateOrInstall(
   lsVersion: string,
-  extensionVersion: string,
-  vscodeVersion: string,
   lsPath: ServerPath,
   reporter: TelemetryReporter,
 ): Promise<void> {
@@ -44,7 +43,7 @@ export async function updateOrInstall(
 
   // Get LS release information from github release
   // Fall back to latest if not requested version not available
-  let release: any;
+  let release: Release;
   try {
     release = await getRequiredVersionRelease(versionString);
   } catch (err) {
@@ -61,7 +60,7 @@ export async function updateOrInstall(
   if (lsPresent === false) {
     // LS is not present, need to download now in order to function
     // Install directly to production path and return normal execution
-    return installTerraformLS(lsPath.installPath(), release, extensionVersion, vscodeVersion, reporter);
+    return installTerraformLS(lsPath.installPath(), release, reporter);
   }
 
   // We know there is an LS Present at this point, find out version if possible
@@ -69,7 +68,7 @@ export async function updateOrInstall(
   if (installedVersion === undefined) {
     console.log(`Currently installed Terraform language server is version '${installedVersion}`);
     // ls is present but too old to tell us the version, so need to update now
-    return installTerraformLS(lsPath.installPath(), release, extensionVersion, vscodeVersion, reporter);
+    return installTerraformLS(lsPath.installPath(), release, reporter);
   }
 
   // We know there is an LS present and know the version, so decide whether to update or not
@@ -78,21 +77,21 @@ export async function updateOrInstall(
 
   // Already at the latest or specified version, no update needed
   // return to normal execution flow
-  if (semver.eq(release.tag_name, installedVersion, { includePrerelease: true })) {
-    console.log(`Language server release is current: ${release.tag_name}`);
+  if (semver.eq(release.version, installedVersion, { includePrerelease: true })) {
+    console.log(`Language server release is current: ${release.version}`);
     return;
   }
 
   // We used to prompt for decision here, but effectively downgrading or upgrading
   // are the same operation so log decision and update
-  if (semver.gt(release.tag_name, installedVersion, { includePrerelease: true })) {
+  if (semver.gt(release.version, installedVersion, { includePrerelease: true })) {
     // Upgrade
-    console.log(`A newer language server release is available: ${release.tag_name}`);
-  } else if (semver.lt(release.tag_name, installedVersion, { includePrerelease: true })) {
+    console.log(`A newer language server release is available: ${release.version}`);
+  } else if (semver.lt(release.version, installedVersion, { includePrerelease: true })) {
     // Downgrade
-    console.log(`An older language server release is available: ${release.tag_name}`);
+    console.log(`An older language server release is available: ${release.version}`);
   }
 
   // Update indicated and user wants autoupdates, so update to latest or specified version
-  return installTerraformLS(lsPath.stgInstallPath(), release, extensionVersion, vscodeVersion, reporter);
+  return installTerraformLS(lsPath.stgInstallPath(), release, reporter);
 }

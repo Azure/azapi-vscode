@@ -8,34 +8,25 @@ suite('completion', () => {
     await vscode.commands.executeCommand('workbench.action.closeAllEditors');
   });
 
-  test('simple completion', async () => {
+  test('type completion', async () => {
     const wanted = new vscode.CompletionList([
-      new vscode.CompletionItem('data', vscode.CompletionItemKind.Class),
-      new vscode.CompletionItem('locals', vscode.CompletionItemKind.Class),
-      new vscode.CompletionItem('module', vscode.CompletionItemKind.Class),
-      new vscode.CompletionItem('output', vscode.CompletionItemKind.Class),
-      new vscode.CompletionItem('provider', vscode.CompletionItemKind.Class),
-      new vscode.CompletionItem('resource', vscode.CompletionItemKind.Class),
-      new vscode.CompletionItem('terraform', vscode.CompletionItemKind.Class),
-      new vscode.CompletionItem('variable', vscode.CompletionItemKind.Class),
-      new vscode.CompletionItem({ label: 'fore', description: 'For Each' }, vscode.CompletionItemKind.Snippet),
-      new vscode.CompletionItem({ label: 'module', description: 'Module' }, vscode.CompletionItemKind.Snippet),
-      new vscode.CompletionItem({ label: 'output', description: 'Output' }, vscode.CompletionItemKind.Snippet),
       new vscode.CompletionItem(
-        { label: 'provisioner', description: 'Provisioner' },
-        vscode.CompletionItemKind.Snippet,
+        '"Microsoft.Addons/supportProviders/supportPlanTypes@2018-03-01"',
+        vscode.CompletionItemKind.Value,
       ),
-      new vscode.CompletionItem({ label: 'vare', description: 'Empty variable' }, vscode.CompletionItemKind.Snippet),
-      new vscode.CompletionItem({ label: 'varm', description: 'Map variable' }, vscode.CompletionItemKind.Snippet),
+      new vscode.CompletionItem(
+        '"Microsoft.Addons/supportProviders/supportPlanTypes@2017-05-15"',
+        vscode.CompletionItemKind.Value,
+      ),
     ]);
 
-    const docUri = getDocUri('actions.tf');
+    const docUri = getDocUri('main.tf');
     await open(docUri);
 
     const list = await vscode.commands.executeCommand<vscode.CompletionList>(
       'vscode.executeCompletionItemProvider',
       docUri,
-      new vscode.Position(0, 0),
+      new vscode.Position(23 - 1, 62 - 1),
     );
 
     assert.ok(list);

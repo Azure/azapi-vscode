@@ -2,6 +2,7 @@ import * as semver from 'semver';
 import * as vscode from 'vscode';
 import { exec } from '../utils';
 import axios from 'axios';
+import { Build, Release } from '../types';
 
 export const DEFAULT_LS_VERSION = 'latest';
 
@@ -13,7 +14,7 @@ export async function getLsVersion(binPath: string): Promise<string | undefined>
   try {
     const jsonCmd: { stdout: string } = await exec(binPath, ['version', '-json']);
     const jsonOutput = JSON.parse(jsonCmd.stdout);
-    return jsonOutput.version;
+    return jsonOutput.version.replace('-dev', '');
   } catch (err) {
     // assume older version of LS which didn't have json flag
     // return undefined as regex matching isn't useful here
@@ -22,12 +23,12 @@ export async function getLsVersion(binPath: string): Promise<string | undefined>
   }
 }
 
-export async function getRequiredVersionRelease(versionString: string): Promise<any> {
+export async function getRequiredVersionRelease(versionString: string): Promise<Release> {
   try {
     const response = await axios.get('https://api.github.com/repos/ms-henglu/azurerm-restapi-lsp/releases');
     if (response.status == 200 && response.data.length != 0) {
       if (versionString == 'latest') {
-        return response.data[0];
+        return toRelease(response.data[0]);
       } else {
         const versions = [];
         for (const i in response.data) {
@@ -36,12 +37,12 @@ export async function getRequiredVersionRelease(versionString: string): Promise<
         const matchedVersion = semver.maxSatisfying(versions, versionString);
         for (const i in response.data) {
           if (response.data[i].tag_name == matchedVersion) {
-            return response.data[i];
+            return toRelease(response.data[i]);
           }
         }
         console.log(`Found no matched release of azurerm-restapi-lsp, version: ${versionString}`);
         vscode.window.showWarningMessage(`Found no matched release of azurerm-restapi-lsp, use latest`);
-        return response.data[0];
+        return toRelease(response.data[0]);
       }
     } else {
       console.log(`Found no releases of azurerm-restapi-lsp`);
@@ -51,7 +52,21 @@ export async function getRequiredVersionRelease(versionString: string): Promise<
     console.log(err);
   }
   vscode.window.showWarningMessage(`Found no releases of azurerm-restapi-lsp`);
-  return null;
+  return { version: '', assets: [] };
+}
+
+function toRelease(data: any): Release {
+  const assets: Build[] = [];
+  for (const i in data.assets) {
+    assets.push({
+      name: data.assets[i].name,
+      downloadUrl: data.assets[i].browser_download_url,
+    });
+  }
+  return {
+    version: data.name,
+    assets: assets,
+  };
 }
 
 export async function pathExists(filePath: string): Promise<boolean> {

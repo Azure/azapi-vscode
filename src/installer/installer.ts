@@ -5,22 +5,20 @@ import TelemetryReporter from 'vscode-extension-telemetry';
 import { pathExists } from './detector';
 import * as fs from 'fs';
 import * as unzip from 'unzip-stream';
+import { Build, Release } from '../types';
 
 export async function installTerraformLS(
   installPath: string,
-  release: any,
-  extensionVersion: string,
-  vscodeVersion: string,
+  release: Release,
   reporter: TelemetryReporter,
 ): Promise<void> {
   reporter.sendTelemetryEvent('installingLs', { terraformLsVersion: release.version });
 
-  const zipfile = path.resolve(installPath, `azurerm-restapi-lsp_${release.tag_name}.zip`);
-  const userAgent = `Terraform-VSCode/${extensionVersion} VSCode/${vscodeVersion}`;
+  const zipfile = path.resolve(installPath, `azurerm-restapi-lsp_${release.version}.zip`);
   const os = getPlatform();
   const arch = getArch();
 
-  let build: any;
+  let build: Build | undefined;
   for (const i in release.assets) {
     if (release.assets[i].name.endsWith(`${os}_${arch}.zip`)) {
       build = release.assets[i];
@@ -52,7 +50,7 @@ export async function installTerraformLS(
     async (progress) => {
       // download zip
       progress.report({ increment: 30 });
-      await axios.get(build.browser_download_url, { responseType: 'stream' }).then(function (response) {
+      await axios.get(build!.downloadUrl, { responseType: 'stream' }).then(function (response) {
         const fileWritePipe = fs.createWriteStream(zipfile);
         response.data.pipe(fileWritePipe);
         return new Promise<void>((resolve, reject) => {
@@ -65,7 +63,7 @@ export async function installTerraformLS(
       progress.report({ increment: 30 });
 
       // unzip
-      const versionedName = path.resolve(installPath, `azurerm-restapi-lsp_${release.tag_name}.exe`);
+      const versionedName = path.resolve(installPath, `azurerm-restapi-lsp_${release.version}.exe`);
       const unversionedName = path.resolve(installPath, `azurerm-restapi-lsp.exe`);
       progress.report({ increment: 20 });
       const fileReadStream = fs.createReadStream(zipfile);

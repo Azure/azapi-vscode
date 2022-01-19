@@ -1,26 +1,8 @@
 import * as path from 'path';
 import { runTests } from 'vscode-test';
 import { TestOptions } from 'vscode-test/out/runTest';
-import { exec } from '../utils';
-
-async function terraformInit() {
-  const cwd = process.cwd();
-  process.chdir('testFixture');
-  const { stdout } = await exec('terraform', ['init', '-no-color']);
-  console.log(stdout);
-  process.chdir(cwd);
-}
 
 async function main(): Promise<void> {
-  try {
-    // initialize terraform before vscode opens
-    await terraformInit();
-  } catch (err) {
-    console.error(err);
-    console.error('Failed to run tests');
-    process.exitCode = 1;
-  }
-
   // The folder containing the Extension Manifest package.json
   // Passed to `--extensionDevelopmentPath`
   // this is also the process working dir, even if vscode opens another folder
