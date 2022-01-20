@@ -25,7 +25,11 @@ export async function getLsVersion(binPath: string): Promise<string | undefined>
 
 export async function getRequiredVersionRelease(versionString: string): Promise<Release> {
   try {
-    const response = await axios.get('https://api.github.com/repos/ms-henglu/azurerm-restapi-lsp/releases');
+    const response = await axios.get('https://api.github.com/repos/ms-henglu/azurerm-restapi-lsp/releases', {
+      headers: {
+        Authorization: 'token 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',
+      },
+    });
     if (response.status == 200 && response.data.length != 0) {
       if (versionString == 'latest') {
         return toRelease(response.data[0]);
