@@ -109,8 +109,6 @@ async function updateLanguageServer(extVersion: string, lsPath: ServerPath, sche
   try {
     await updateOrInstall(
       config('azurerm-restapi').get('languageServer.requiredVersion', DEFAULT_LS_VERSION),
-      extVersion,
-      vscode.version,
       lsPath,
       reporter,
     );

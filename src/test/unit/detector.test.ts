@@ -1,104 +1,24 @@
 import { mocked } from 'ts-jest/utils';
 import { exec as execOrg } from '../../utils';
-import { getRelease as getReleaseOrg, Release } from '@hashicorp/js-releases';
 import { getLsVersion, isValidVersionString, getRequiredVersionRelease } from '../../installer/detector';
 
 jest.mock('../../utils');
-jest.mock('@hashicorp/js-releases');
 
 const exec = mocked(execOrg);
-const getRelease = mocked(getReleaseOrg);
 
 describe('terraform release detector', () => {
   test('returns valid release', async () => {
-    const name = 'azurerm-restapi-lsp';
-    const shasums = 'azurerm-restapi-lsp_0.24.0_SHA256SUMS';
-    const shasums_signature = 'azurerm-restapi-lsp_0.24.0_SHA256SUMS.72D7468F.sig';
-    const version = '0.24.0';
-    const buildInfo = {
-      arch: 'amd64',
-      filename: 'azurerm-restapi-lsp_0.24.0_windows_amd64.zip',
-      name: 'azurerm-restapi-lsp',
-      os: 'windows',
-      url: 'https://releases.hashicorp.com/azurerm-restapi-lsp/0.24.0/azurerm-restapi-lsp_0.24.0_windows_amd64.zip',
-      version: '0.24.0',
-    };
-
-    getRelease.mockImplementationOnce(async () => {
-      return {
-        builds: [buildInfo],
-        name: name,
-        shasums: shasums,
-        shasums_signature: shasums_signature,
-        version: version,
-        getBuild: jest.fn(),
-        download: jest.fn(),
-        verify: jest.fn(),
-        unpack: jest.fn(),
-        calculateFileSha256Sum: jest.fn(),
-        downloadSha256Sum: jest.fn(),
-      };
-    });
-
-    const expected = {
-      builds: [buildInfo],
-      name: name,
-      shasums: shasums,
-      shasums_signature: shasums_signature,
-      version: version,
-    };
-
-    const result = await getRequiredVersionRelease('0.24.0', '2.16.0', '1.66.0');
-
-    expect(result).toMatchObject(expected);
+    const version = 'v0.0.1';
+    const result = await getRequiredVersionRelease(version);
+    expect(result.version).toMatch(version);
+    expect(result.assets.length).toBeGreaterThan(0);
   });
 
   test('returns latest if invalid version', async () => {
-    const name = 'azurerm-restapi-lsp';
-    const shasums = 'azurerm-restapi-lsp_0.24.0_SHA256SUMS';
-    const shasums_signature = 'azurerm-restapi-lsp_0.24.0_SHA256SUMS.72D7468F.sig';
-    const version = '0.24.0';
-    const buildInfo = {
-      arch: 'amd64',
-      filename: 'azurerm-restapi-lsp_0.24.0_windows_amd64.zip',
-      name: 'azurerm-restapi-lsp',
-      os: 'windows',
-      url: 'https://releases.hashicorp.com/azurerm-restapi-lsp/0.24.0/azurerm-restapi-lsp_0.24.0_windows_amd64.zip',
-      version: '0.24.0',
-    };
-
-    getRelease
-      .mockImplementationOnce(() => {
-        throw new Error('invalid version');
-      })
-      .mockImplementationOnce(async () => {
-        return {
-          builds: [buildInfo],
-          name: name,
-          shasums: shasums,
-          shasums_signature: shasums_signature,
-          version: version,
-          getBuild: jest.fn(),
-          download: jest.fn(),
-          verify: jest.fn(),
-          unpack: jest.fn(),
-          calculateFileSha256Sum: jest.fn(),
-          downloadSha256Sum: jest.fn(),
-        };
-      });
-
-    const expected = {
-      builds: [buildInfo],
-      name: name,
-      shasums: shasums,
-      shasums_signature: shasums_signature,
-      version: version,
-    };
-
-    const result = await getRequiredVersionRelease('10000.24.0', '2.16.0', '1.66.0');
-
-    expect(result).toMatchObject(expected);
-    expect(getRelease).toBeCalledTimes(2);
+    const resultWithInvalidVersion = await getRequiredVersionRelease('v10000.24.0');
+    const resultLatest = await getRequiredVersionRelease('latest');
+    expect(resultLatest.version.length).toBeGreaterThan(0);
+    expect(resultWithInvalidVersion).toMatchObject(resultLatest);
   });
 });
 

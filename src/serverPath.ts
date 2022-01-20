@@ -20,13 +20,6 @@ export class ServerPath {
     return path.join(this.context.globalStorageUri.fsPath, 'stg');
   }
 
-  // legacyBinPath represents old location where LS was installed.
-  // We only use it to ensure that old installations are removed
-  // from there after LS is installed into the new path.
-  public legacyBinPath(): string {
-    return path.resolve(this.context.asAbsolutePath('lsp'), this.binName());
-  }
-
   public hasCustomBinPath(): boolean {
     return !!this.customBinPath;
   }

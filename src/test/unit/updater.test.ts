@@ -11,6 +11,7 @@ import {
 } from '../../installer/detector';
 import { ServerPath } from '../../serverPath';
 import { lsPathMock } from './mocks/serverPath';
+import { Release } from '../../types';
 
 jest.mock('../../installer/detector');
 jest.mock('../../installer/installer');
@@ -41,24 +42,10 @@ describe('azurerm-restapi-lsp updater', () => {
         .mockImplementationOnce(async () => false); // prod not present
 
       isValidVersionString.mockImplementationOnce(() => true);
-
       getRequiredVersionRelease.mockImplementationOnce(async () => {
-        return {
-          name: 'foo',
-          shasums: '',
-          shasums_signature: '',
-          version: '',
-          builds: [],
-          getBuild: jest.fn(),
-          download: jest.fn(),
-          verify: jest.fn(),
-          unpack: jest.fn(),
-          calculateFileSha256Sum: jest.fn(),
-          downloadSha256Sum: jest.fn(),
-        };
+        return getRelease('v0.0.1');
       });
-
-      await updateOrInstall('0.24.0', '2.16.0', '1.66.0', lsPath, reporter);
+      await updateOrInstall('v0.0.1', lsPath, reporter);
 
       expect(pathExists).toBeCalledTimes(2);
       expect(installTerraformLS).toBeCalledTimes(1);
@@ -84,24 +71,11 @@ describe('azurerm-restapi-lsp updater', () => {
 
       isValidVersionString.mockImplementationOnce(() => true);
 
-      getRequiredVersionRelease.mockImplementationOnce(async () => {
-        return {
-          name: 'azurerm-restapi-lsp',
-          version: '0.24.0',
-          shasums_signature: '',
-          builds: [],
-          getBuild: jest.fn(),
-          download: jest.fn(),
-          verify: jest.fn(),
-          unpack: jest.fn(),
-          calculateFileSha256Sum: jest.fn(),
-          downloadSha256Sum: jest.fn(),
-        };
-      });
-
       getLsVersion.mockImplementationOnce(async () => undefined);
-
-      await updateOrInstall('0.24.0', '2.16.0', '1.66.0', lsPath, reporter);
+      getRequiredVersionRelease.mockImplementationOnce(async () => {
+        return getRelease('v0.0.1');
+      });
+      await updateOrInstall('v0.0.1', lsPath, reporter);
 
       expect(pathExists).toBeCalledTimes(2);
       expect(installTerraformLS).toBeCalledTimes(1);
@@ -126,24 +100,11 @@ describe('azurerm-restapi-lsp updater', () => {
         return true;
       });
 
+      getLsVersion.mockImplementationOnce(async () => 'v0.0.1');
       getRequiredVersionRelease.mockImplementationOnce(async () => {
-        return {
-          name: 'azurerm-restapi-lsp',
-          version: '0.24.0',
-          shasums_signature: '',
-          builds: [],
-          getBuild: jest.fn(),
-          download: jest.fn(),
-          verify: jest.fn(),
-          unpack: jest.fn(),
-          calculateFileSha256Sum: jest.fn(),
-          downloadSha256Sum: jest.fn(),
-        };
+        return getRelease('v0.0.2');
       });
-
-      getLsVersion.mockImplementationOnce(async () => '0.23.0');
-
-      await updateOrInstall('0.24.0', '2.16.0', '1.66.0', lsPath, reporter);
+      await updateOrInstall('v0.0.2', lsPath, reporter);
 
       expect(pathExists).toBeCalledTimes(2);
       expect(installTerraformLS).toBeCalledTimes(1);
@@ -155,7 +116,10 @@ describe('azurerm-restapi-lsp updater', () => {
       // this mimics the stging path being present, which should trigger a rename
       pathExists.mockImplementationOnce(async () => true);
 
-      await updateOrInstall('0.24.0', '2.16.0', '1.66.0', lsPath, reporter);
+      getRequiredVersionRelease.mockImplementationOnce(async () => {
+        return getRelease('v0.0.1');
+      });
+      await updateOrInstall('v0.0.1', lsPath, reporter);
 
       // expect stg to be renamed to prod
       expect(vscode.workspace.fs.rename).toBeCalledTimes(1);
@@ -185,7 +149,10 @@ describe('azurerm-restapi-lsp updater', () => {
         .mockImplementationOnce(async () => false) // stg
         .mockImplementationOnce(async () => true); // prod
 
-      await updateOrInstall('0.24.0', '2.16.0', '1.66.0', lsPath, reporter);
+      getRequiredVersionRelease.mockImplementationOnce(async () => {
+        return getRelease('v0.0.1');
+      });
+      await updateOrInstall('v0.0.1', lsPath, reporter);
 
       expect(pathExists).toBeCalledTimes(2);
       expect(vscode.workspace.getConfiguration).toBeCalledTimes(1);
@@ -218,8 +185,7 @@ describe('azurerm-restapi-lsp updater', () => {
       getRequiredVersionRelease.mockImplementationOnce(() => {
         throw new Error('wahtever');
       });
-
-      await updateOrInstall('0.24.0', '2.16.0', '1.66.0', lsPath, reporter);
+      await updateOrInstall('v0.0.1', lsPath, reporter);
 
       expect(pathExists).toBeCalledTimes(2);
       expect(getRequiredVersionRelease).toBeCalledTimes(1);
@@ -245,27 +211,35 @@ describe('azurerm-restapi-lsp updater', () => {
 
       isValidVersionString.mockImplementationOnce(() => true);
 
+      getLsVersion.mockImplementationOnce(async () => 'v0.0.1');
       getRequiredVersionRelease.mockImplementationOnce(async () => {
-        return {
-          name: 'azurerm-restapi-lsp',
-          version: '0.24.0',
-          shasums_signature: '',
-          builds: [],
-          getBuild: jest.fn(),
-          download: jest.fn(),
-          verify: jest.fn(),
-          unpack: jest.fn(),
-          calculateFileSha256Sum: jest.fn(),
-          downloadSha256Sum: jest.fn(),
-        };
+        return getRelease('v0.0.1');
       });
 
-      getLsVersion.mockImplementationOnce(async () => '0.24.0');
-
-      await updateOrInstall('0.24.0', '2.16.0', '1.66.0', lsPath, reporter);
+      await updateOrInstall('v0.0.1', lsPath, reporter);
 
       expect(pathExists).toBeCalledTimes(2);
       expect(installTerraformLS).toBeCalledTimes(0);
     });
   });
 });
+
+function getRelease(version: string): Release {
+  return {
+    version: version,
+    assets: [
+      {
+        downloadUrl: `https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/${version}/azurerm-restapi-lsp_${version}_windows_amd64.zip`,
+        name: `azurerm-restapi-lsp_${version}_windows_amd64.zip`,
+      },
+      {
+        downloadUrl: `https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/${version}/azurerm-restapi-lsp_${version}_darwin_amd64.zip`,
+        name: `azurerm-restapi-lsp_${version}_darwin_amd64.zip`,
+      },
+      {
+        downloadUrl: `https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/${version}/azurerm-restapi-lsp_${version}_linux_amd64.zip`,
+        name: `azurerm-restapi-lsp_${version}_linux_amd64.zip`,
+      },
+    ],
+  };
+}

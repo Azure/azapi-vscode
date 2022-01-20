@@ -4,6 +4,15 @@
 export interface ExperimentalClientCapabilities {
   experimental: {
     telemetryVersion?: number;
-    showReferencesCommandId?: string;
   };
+}
+
+export interface Build {
+  name: string;
+  downloadUrl: string;
+}
+
+export interface Release {
+  version: string;
+  assets: Build[];
 }
