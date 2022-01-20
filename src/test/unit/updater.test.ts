@@ -238,7 +238,7 @@ function getRelease(version: string): Release {
       },
       {
         downloadUrl: `https://github.com/ms-henglu/azurerm-restapi-lsp/releases/download/${version}/azurerm-restapi-lsp_${version}_linux_amd64.zip`,
-        name: `azurerm-restapi-lsp_${version}_windows_amd64.zip`,
+        name: `azurerm-restapi-lsp_${version}_linux_amd64.zip`,
       },
     ],
   };
