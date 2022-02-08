@@ -15,6 +15,25 @@ The Terraform azurerm-restapi Provider Visual Studio Code (VS Code) extension ad
 The [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp) hasn't been released, so it can only be tested
 in local for now.
 
+### For Test Only
+1. Download vsix file from releases, and install it as VSCode extension.
+2. Clone [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp) to local
+3. Run `go install` under project folder
+4. Add the following configuration to vscode setting file.
+```
+   "azurerm-restapi.languageServer": {
+        "external": true,
+        "pathToBinary": "C:\\Users\\henglu\\go\\bin\\azurerm-restapi-lsp.exe",  //file path to language server
+        "args": [
+            "serve"
+        ],
+        "maxNumberOfProblems": 100,
+        "trace.server": "messages"
+    },
+```
+
+### Local Development
+
 0. Prerequisites: golang >1.16, node v14.x.x, npm > 6.0.0
 1. Clone [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp) to local
 2. Run `go install` under project folder
