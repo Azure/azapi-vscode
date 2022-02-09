@@ -45,7 +45,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         );
       }
       await updateLanguageServer(manifest.version, lsPath);
-      return clientHandler.startClient();
     }),
     vscode.commands.registerCommand('azurerm-restapi.disableLanguageServer', async () => {
       if (enabled()) {
