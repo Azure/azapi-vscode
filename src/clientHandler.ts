@@ -50,9 +50,6 @@ export class ClientHandler {
 
     const initializeResult = this.tfClient.client.initializeResult;
     if (initializeResult !== undefined) {
-      const multiFoldersSupported = initializeResult.capabilities.workspace?.workspaceFolders?.supported;
-      console.log(`Multi-folder support: ${multiFoldersSupported}`);
-
       this.commands = initializeResult.capabilities.executeCommandProvider?.commands ?? [];
     }
 
