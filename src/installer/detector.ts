@@ -48,15 +48,14 @@ export async function getRequiredVersionRelease(versionString: string): Promise<
         vscode.window.showWarningMessage(`Found no matched release of azurerm-restapi-lsp, use latest`);
         return toRelease(response.data[0]);
       }
-    } else {
-      console.log(`Found no releases of azurerm-restapi-lsp`);
     }
-    console.log(response);
+    vscode.window.showWarningMessage(`Found no releases of azurerm-restapi-lsp`);
   } catch (err) {
-    console.log(err);
+    vscode.window.showErrorMessage(`Error loading releases of azurerm-restapi-lsp`);
+    throw err
   }
-  vscode.window.showWarningMessage(`Found no releases of azurerm-restapi-lsp`);
-  return { version: '', assets: [] };
+
+  throw new Error("no valid release")
 }
 
 function toRelease(data: any): Release {
