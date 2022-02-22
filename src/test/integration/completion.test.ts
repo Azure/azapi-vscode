@@ -22,7 +22,7 @@ suite('completion', () => {
 
     const docUri = getDocUri('main.tf');
     await open(docUri);
-
+    await new Promise(r => setTimeout(r, 1000 * 5));
     const list = await vscode.commands.executeCommand<vscode.CompletionList>(
       'vscode.executeCompletionItemProvider',
       docUri,
