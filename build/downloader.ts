@@ -124,6 +124,8 @@ async function run(platform: string, architecture: string) {
     fileReadStream.on('error', reject);
   });
 
+  fs.rename(versionedName, unversionedName, function() {})
+
   fs.rmSync(zipfile, {
     recursive: true,
   });

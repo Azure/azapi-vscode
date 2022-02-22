@@ -92,12 +92,6 @@
               ],
               "description": "Arguments to pass to language server binary"
             },
-            "maxNumberOfProblems": {
-              "scope": "resource",
-              "type": "number",
-              "default": 100,
-              "description": "Controls the maximum number of problems produced by the server."
-            },
             "trace.server": {
               "scope": "window",
               "type": "string",
@@ -108,10 +102,6 @@
               ],
               "default": "off",
               "description": "Traces the communication between VS Code and the language server."
-            },
-            "requiredVersion": {
-              "type": "string",
-              "description": "The required version of the Language Server described as a semantic version string, for example '^2.0.1' or '> 1.0'. Defaults to latest available version."
             }
           },
           "default": {
@@ -120,7 +110,6 @@
             "args": [
               "serve"
             ],
-            "maxNumberOfProblems": 100,
             "trace.server": "off"
           }
         }

@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { ClientHandler } from './clientHandler';
-import { DEFAULT_LS_VERSION, isValidVersionString } from './installer/detector';
 import { ServerPath } from './serverPath';
 import { config } from './vscodeUtils';
 
@@ -20,15 +19,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   const lsPath = new ServerPath(context);
   clientHandler = new ClientHandler(lsPath, outputChannel, reporter);
-
-  if (config('azurerm-restapi').has('languageServer.requiredVersion')) {
-    const langServerVer = config('azurerm-restapi').get('languageServer.requiredVersion', DEFAULT_LS_VERSION);
-    if (!isValidVersionString(langServerVer)) {
-      vscode.window.showWarningMessage(
-        `The Terraform Language Server Version string '${langServerVer}' is not a valid semantic version and will be ignored.`,
-      );
-    }
-  }
 
   // Subscriptions
   context.subscriptions.push(

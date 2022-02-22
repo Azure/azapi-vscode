@@ -27,7 +27,6 @@ in local for now.
         "args": [
             "serve"
         ],
-        "maxNumberOfProblems": 100,
         "trace.server": "messages"
     },
 ```
@@ -45,7 +44,6 @@ in local for now.
         "args": [
             "serve"
         ],
-        "maxNumberOfProblems": 100,
         "trace.server": "messages"
     },
 ```
