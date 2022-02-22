@@ -111,8 +111,9 @@ async function run(platform: string, architecture: string) {
   });
 
   // unzip
-  const versionedName = path.resolve(installPath, `azurerm-restapi-lsp_${release.version}.exe`);
-  const unversionedName = path.resolve(installPath, `azurerm-restapi-lsp.exe`);
+  const fileExtension = os === "windows" ? ".exe" : "";
+  const versionedName = path.resolve(installPath, `azurerm-restapi-lsp_${release.version}${fileExtension}`);
+  const unversionedName = path.resolve(installPath, `azurerm-restapi-lsp${fileExtension}`);
   const fileReadStream = fs.createReadStream(zipfile);
   const unzipPipe = unzip.Extract({ path: installPath });
   fileReadStream.pipe(unzipPipe);
