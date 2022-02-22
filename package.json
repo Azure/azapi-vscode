@@ -141,7 +141,6 @@
     "test-compile": "tsc -p ./",
     "pretest": "npm run download:ls && npm run test-compile && npm run lint",
     "test": "node ./out/test/runTest.js",
-    "test:unit": "jest --silent=false",
     "lint": "eslint src --ext ts",
     "prettier": "prettier \"**/*.+(js|json|ts)\"",
     "format": "npm run prettier -- --write",
