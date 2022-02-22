@@ -3,7 +3,7 @@
   "name": "azurerm-restapi",
   "displayName": "Terraform azurerm-restapi Provider",
   "description": "Autocompletion for Terraform azurerm-restapi Provider",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "ms-henglu",
   "appInsightsKey": "TODO",
   "license": "MPL-2.0",
