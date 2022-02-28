@@ -95,7 +95,7 @@ export class ClientHandler {
 
   private async getServerOptions(): Promise<ServerOptions> {
     const cmd = await this.lsPath.resolvedPathToBinary();
-    const serverArgs = config('azurerm-restapi').get<string[]>('languageServer.args', []);
+    const serverArgs = config('azapi').get<string[]>('languageServer.args', []);
     const executable: Executable = {
       command: cmd,
       args: serverArgs,
