@@ -3,7 +3,7 @@
   "name": "azapi",
   "displayName": "Terraform AzApi Provider",
   "description": "Autocompletion for Terraform AzApi Provider",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "ms-henglu",
   "appInsightsKey": "TODO",
   "license": "MPL-2.0",
