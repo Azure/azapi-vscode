@@ -9,7 +9,7 @@ export class ServerPath {
   private customBinPath: string | undefined;
 
   constructor(private context: vscode.ExtensionContext) {
-    this.customBinPath = vscode.workspace.getConfiguration('azurerm-restapi').get(CUSTOM_BIN_PATH_OPTION_NAME);
+    this.customBinPath = vscode.workspace.getConfiguration('azapi').get(CUSTOM_BIN_PATH_OPTION_NAME);
   }
 
   public installPath(): string {
@@ -34,9 +34,9 @@ export class ServerPath {
     }
 
     if (process.platform === 'win32') {
-      return 'azurerm-restapi-lsp.exe';
+      return 'azapi-lsp.exe';
     }
-    return 'azurerm-restapi-lsp';
+    return 'azapi-lsp';
   }
 
   public async resolvedPathToBinary(): Promise<string> {

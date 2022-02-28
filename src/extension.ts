@@ -4,7 +4,7 @@ import { ClientHandler } from './clientHandler';
 import { ServerPath } from './serverPath';
 import { config } from './vscodeUtils';
 
-const brand = `Terraform azurerm-restapi Provider`;
+const brand = `Terraform AzApi Provider`;
 const outputChannel = vscode.window.createOutputChannel(brand);
 export let terraformStatus: vscode.StatusBarItem;
 
@@ -22,10 +22,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   // Subscriptions
   context.subscriptions.push(
-    vscode.commands.registerCommand('azurerm-restapi.enableLanguageServer', async () => {
+    vscode.commands.registerCommand('azapi.enableLanguageServer', async () => {
       if (!enabled()) {
-        const current = config('azurerm-restapi').get('languageServer');
-        await config('azurerm-restapi').update(
+        const current = config('azapi').get('languageServer');
+        await config('azapi').update(
           'languageServer',
           Object.assign(current, { external: true }),
           vscode.ConfigurationTarget.Global,
@@ -33,10 +33,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       }
       startLanguageServer();
     }),
-    vscode.commands.registerCommand('azurerm-restapi.disableLanguageServer', async () => {
+    vscode.commands.registerCommand('azapi.disableLanguageServer', async () => {
       if (enabled()) {
-        const current = config('azurerm-restapi').get('languageServer');
-        await config('azurerm-restapi').update(
+        const current = config('azapi').get('languageServer');
+        await config('azapi').update(
           'languageServer',
           Object.assign(current, { external: false }),
           vscode.ConfigurationTarget.Global,
@@ -45,7 +45,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       stopLanguageServer();
     }),
     vscode.workspace.onDidChangeConfiguration(async (event: vscode.ConfigurationChangeEvent) => {
-      if (event.affectsConfiguration('terraform') || event.affectsConfiguration('azurerm-restapi-lsp')) {
+      if (event.affectsConfiguration('terraform') || event.affectsConfiguration('azapi-lsp')) {
         const reloadMsg = 'Reload VSCode window to apply language server changes';
         const selected = await vscode.window.showInformationMessage(reloadMsg, 'Reload');
         if (selected === 'Reload') {
@@ -97,5 +97,5 @@ async function stopLanguageServer() {
 }
 
 function enabled(): boolean {
-  return config('azurerm-restapi').get('languageServer.external', false);
+  return config('azapi').get('languageServer.external', false);
 }

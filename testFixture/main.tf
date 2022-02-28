@@ -1,12 +1,12 @@
 terraform {
   required_providers {
-    azurerm-restapi = {
-      source = "Azure/azurerm-restapi"
+    azapi = {
+      source = "Azure/azapi"
     }
   }
 }
 
-provider "azurerm-restapi" {
+provider "azapi" {
 }
 
 provider "azurerm" {
@@ -19,6 +19,6 @@ resource "azurerm_resource_group" "example" {
   location = "West Europe"
 }
 
-resource "azurerm-restapi_resource" "test" {
+resource "azapi_resource" "test" {
   type = "Microsoft.Addons/supportProviders/supportPlanTypes@"
 }

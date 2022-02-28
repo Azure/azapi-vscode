@@ -1,8 +1,8 @@
 {
   "icon": "terraform.png",
-  "name": "azurerm-restapi",
-  "displayName": "Terraform azurerm-restapi Provider",
-  "description": "Autocompletion for Terraform azurerm-restapi Provider",
+  "name": "azapi",
+  "displayName": "Terraform AzApi Provider",
+  "description": "Autocompletion for Terraform AzApi Provider",
   "version": "0.0.2",
   "publisher": "ms-henglu",
   "appInsightsKey": "TODO",
@@ -17,9 +17,9 @@
   "langServer": {
     "version": "0.25.2"
   },
-  "qna": "https://github.com/ms-henglu/azurerm-restapi-vscode/issues",
+  "qna": "https://github.com/Azure/azapi-vscode/issues",
   "bugs": {
-    "url": "https://github.com/ms-henglu/azurerm-restapi-vscode/issues",
+    "url": "https://github.com/Azure/azapi-vscode/issues",
     "email": "ms-henglu@microsoft.com"
   },
   "categories": [
@@ -36,7 +36,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ms-henglu/azurerm-restapi-vscode.git"
+    "url": "https://github.com/Azure/azapi-vscode.git"
   },
   "activationEvents": [
     "onLanguage:terraform",
@@ -69,7 +69,7 @@
       "type": "object",
       "title": "Terraform",
       "properties": {
-        "azurerm-restapi.languageServer": {
+        "azapi.languageServer": {
           "type": "object",
           "description": "Language Server settings",
           "properties": {
@@ -117,12 +117,12 @@
     },
     "commands": [
       {
-        "command": "azurerm-restapi.enableLanguageServer",
-        "title": "Terraform azurerm-restapi Provider : Enable Language Server"
+        "command": "azapi.enableLanguageServer",
+        "title": "Terraform AzApi Provider : Enable Language Server"
       },
       {
-        "command": "azurerm-restapi.disableLanguageServer",
-        "title": "Terraform azurerm-restapi Provider: Disable Language Server"
+        "command": "azapi.disableLanguageServer",
+        "title": "Terraform AzApi Provider: Disable Language Server"
       }
     ],
     "menus": {},

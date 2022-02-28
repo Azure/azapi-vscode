@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Terraform azurerm-restapi Provider Language Features / Bugs
-    url: https://github.com/ms-henglu/azurerm-restapi-lsp/issues
+  - name: Terraform AzApi Provider Language Features / Bugs
+    url: https://github.com/Azure/azapi-lsp/issues
     about: >-
       Most of the language features of the VS Code extension are supplied by the
-      Terraform azurerm-restapi Provider Language Server. Issues with language features
+      Terraform AzApi Provider Language Server. Issues with language features
       in many cases may need to be filed on that repository.

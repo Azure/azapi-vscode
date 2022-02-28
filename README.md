@@ -1,14 +1,14 @@
-# Terraform azurerm-restapi Provider Visual Studio Code Extension
+# Terraform AzApi Provider Visual Studio Code Extension
 
-The Terraform azurerm-restapi Provider Visual Studio Code (VS Code) extension adds editing features like completion/hover/diagnositics for [terraform-provider-azurerm-restapi](https://github.com/Azure/terraform-provider-azurerm-restapi) Terraform files using the [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp).
+The Terraform AzApi Provider Visual Studio Code (VS Code) extension adds editing features like completion/hover/diagnositics for [terraform-provider-azapi](https://github.com/Azure/terraform-provider-azapi) Terraform files using the [Terraform AzApi Provider Language Server](https://github.com/Azure/azapi-lsp).
 
 ## Features
 
-- Manages the [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp), exposing its features:
-- Completion of `azurerm-restapi` resources
-- Completion of allowed azure resource types when input `type` in `azurerm-restapi` resources
-- Completion of allowed azure resource properties when input `body` in `azurerm-restapi` resources, limitation: it only works when use `jsonencode` function to build the JSON
-- Show hint when hover on `azurerm-restapi` resources
+- Manages the [Terraform AzApi Provider Language Server](https://github.com/Azure/azapi-lsp), exposing its features:
+- Completion of `azapi` resources
+- Completion of allowed azure resource types when input `type` in `azapi` resources
+- Completion of allowed azure resource properties when input `body` in `azapi` resources, limitation: it only works when use `jsonencode` function to build the JSON
+- Show hint when hover on `azapi` resources
 - Diagnostics to indicate schema errors as you type
 
 ## Usage
@@ -22,9 +22,9 @@ Now language server is bundled with extension, but it's still possible to use
 exteral lanuage server by configuring the following:
 
 ```
-   "azurerm-restapi.languageServer": {
+   "azapi.languageServer": {
         "external": true,
-        "pathToBinary": "C:\\Users\\henglu\\go\\bin\\azurerm-restapi-lsp.exe",  //file path to language server
+        "pathToBinary": "C:\\Users\\henglu\\go\\bin\\azapi-lsp.exe",  //file path to language server
         "args": [
             "serve"
         ],
@@ -34,13 +34,13 @@ exteral lanuage server by configuring the following:
 
 ### Run in local development
 0. Prerequisites: golang >1.16, node 16.X, npm 8.X
-1. Clone [Terraform azurerm-restapi Provider Language Server](https://github.com/ms-henglu/azurerm-restapi-lsp) to local
+1. Clone [Terraform AzApi Provider Language Server](https://github.com/Azure/azapi-lsp) to local
 2. Run `go install` under project folder
 3. Add the following configuration to vscode setting file.
 ```
-   "azurerm-restapi.languageServer": {
+   "azapi.languageServer": {
         "external": true,
-        "pathToBinary": "C:\\Users\\henglu\\go\\bin\\azurerm-restapi-lsp.exe",  //file path to language server
+        "pathToBinary": "C:\\Users\\henglu\\go\\bin\\azapi-lsp.exe",  //file path to language server
         "args": [
             "serve"
         ],
@@ -63,4 +63,4 @@ We use telemetry to send error reports to our team, so we can respond more effec
 
 ## Release History
 
-See the [CHANGELOG](https://github.com/ms-henglu/azurerm-restapi-vscode/blob/develop/CHANGELOG.md) for more information.
+See the [CHANGELOG](https://github.com/Azure/azapi-vscode/blob/develop/CHANGELOG.md) for more information.
