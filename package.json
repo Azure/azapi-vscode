@@ -10,12 +10,9 @@
   "preview": false,
   "private": true,
   "engines": {
-    "npm": "~8.X",
-    "node": "~16.X",
-    "vscode": "^1.61.0"
-  },
-  "langServer": {
-    "version": "0.25.2"
+    "npm": "~6.X",
+    "node": "~14.X",
+    "vscode": "^1.55.0"
   },
   "qna": "https://github.com/Azure/azapi-vscode/issues",
   "bugs": {
@@ -102,6 +99,10 @@
               ],
               "default": "off",
               "description": "Traces the communication between VS Code and the language server."
+            },
+            "requiredVersion": {
+              "type": "string",
+              "description": "The required version of the Language Server described as a semantic version string, for example '^2.0.1' or '> 1.0'. Defaults to latest available version."
             }
           },
           "default": {
@@ -130,50 +131,47 @@
     "viewsWelcome": []
   },
   "scripts": {
-    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-    "esbuild": "npm run esbuild-base -- --sourcemap",
-    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-    "compile": "npm run esbuild",
-    "watch": "npm run download:ls && npm run esbuild-watch",
-    "download:ls": "ts-node ./build/downloader.ts",
-    "vscode:prepublish": "npm run download:ls && npm run esbuild-base -- --minify",
-    "package": "vsce package",
-    "test-compile": "tsc -p ./",
-    "pretest": "npm run download:ls && npm run test-compile && npm run lint",
-    "test": "node ./out/test/runTest.js",
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
     "lint": "eslint src --ext ts",
+    "pretest": "npm run compile && npm run lint",
+    "test": "node ./out/test/runTest.js",
+    "test:unit": "jest --silent=false",
+    "package": "vsce package",
     "prettier": "prettier \"**/*.+(js|json|ts)\"",
     "format": "npm run prettier -- --write",
-    "check-format": "npm run prettier -- --check",
-    "preview": "ts-node ./build/preview.ts"
+    "check-format": "npm run prettier -- --check"
   },
   "dependencies": {
     "@types/axios": "^0.14.0",
+    "@types/semver": "^7.3.4",
+    "@types/unzip-stream": "^0.3.1",
+    "@vscode/extension-telemetry": "^0.4.9",
+    "axios": "^0.24.0",
     "fs": "0.0.1-security",
     "openpgp": "^4.10.10",
+    "semver": "^7.3.5",
     "short-unique-id": "^3.2.3",
-    "vscode-extension-telemetry": "^0.4.2",
+    "unzip-stream": "^0.3.1",
     "vscode-languageclient": "^7.0.0",
     "vscode-uri": "^3.0.2",
-    "which": "^2.0.2"
+    "which": "^2.0.2",
+    "yauzl": "^2.10.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.22",
     "@types/glob": "^7.1.3",
     "@types/jest": "^27.0.3",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.11.7",
+    "@types/node": "^12.12.54",
     "@types/openpgp": "^4.4.15",
-    "@types/semver": "^7.3.4",
-    "@types/unzip-stream": "^0.3.1",
-    "@types/vscode": "^1.61.1",
+    "@types/vscode": "^1.52.0",
     "@types/which": "^2.0.1",
     "@types/yauzl": "^2.9.1",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
-    "axios": "^0.24.0",
     "chai": "^4.3.4",
-    "esbuild": "^0.14.11",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.1",
@@ -181,13 +179,9 @@
     "jest": "^27.4.3",
     "mocha": "^9.1.3",
     "prettier": "^2.3.2",
-    "semver": "^7.3.5",
     "temp": "^0.9.4",
     "ts-jest": "^27.1.0",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.5.4",
-    "unzip-stream": "^0.3.1",
-    "vsce": "^2.6.3",
+    "typescript": "^3.9.7",
     "vscode-test": "^1.5.2"
   }
 }
