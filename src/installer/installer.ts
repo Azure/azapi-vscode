@@ -94,6 +94,16 @@ function getPlatform(): string {
 }
 
 function getArch(): string {
+  // platform | terraform-ls  | extension platform | vs code editor
+  //    --    |           --  |         --         | --
+  // macOS    | darwin_amd64  | darwin_x64         | ✅
+  // macOS    | darwin_arm64  | darwin_arm64       | ✅
+  // Linux    | linux_amd64   | linux_x64          | ✅
+  // Linux    | linux_arm     | linux_armhf        | ✅
+  // Linux    | linux_arm64   | linux_arm64        | ✅
+  // Windows  | windows_386   | win32_ia32         | ✅
+  // Windows  | windows_amd64 | win32_x64          | ✅
+  // Windows  | windows_arm64 | win32_arm64        | ✅
   const arch = process.arch;
 
   if (arch === 'ia32') {
@@ -101,6 +111,9 @@ function getArch(): string {
   }
   if (arch === 'x64') {
     return 'amd64';
+  }
+  if (arch === 'armhf') {
+    return 'arm';
   }
 
   return arch;
