@@ -23,6 +23,28 @@ jobs:
       - name: lint
         run: npm run lint
 
+  unit:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+          - macos-latest
+          - ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 3
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+      - name: npm install
+        run: npm ci
+      - name: unit test
+        run: npm run test:unit
+
   test:
     strategy:
       fail-fast: false

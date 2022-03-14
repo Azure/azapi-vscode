@@ -13,7 +13,11 @@ export class ServerPath {
   }
 
   public installPath(): string {
-    return path.join(this.context.extensionPath, INSTALL_FOLDER_NAME);
+    return path.join(this.context.globalStorageUri.fsPath, INSTALL_FOLDER_NAME);
+  }
+
+  public stgInstallPath(): string {
+    return path.join(this.context.globalStorageUri.fsPath, 'stg');
   }
 
   public hasCustomBinPath(): boolean {
@@ -26,6 +30,14 @@ export class ServerPath {
     }
 
     return path.resolve(this.installPath(), this.binName());
+  }
+
+  public stgBinPath(): string {
+    if (this.customBinPath) {
+      return this.customBinPath;
+    }
+
+    return path.resolve(this.stgInstallPath(), this.binName());
   }
 
   public binName(): string {

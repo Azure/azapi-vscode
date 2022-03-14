@@ -33,7 +33,7 @@ exteral lanuage server by configuring the following:
 ```
 
 ### Run in local development
-0. Prerequisites: golang >1.16, node 16.X, npm 8.X
+0. Prerequisites: golang >1.16, node 14.X, npm 6.X
 1. Clone [Terraform AzApi Provider Language Server](https://github.com/Azure/azapi-lsp) to local
 2. Run `go install` under project folder
 3. Add the following configuration to vscode setting file.

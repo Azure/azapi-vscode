@@ -1,7 +1,10 @@
 import * as vscode from 'vscode';
 import TelemetryReporter from 'vscode-extension-telemetry';
 import { ClientHandler } from './clientHandler';
+import { DEFAULT_LS_VERSION, isValidVersionString } from './installer/detector';
+import { updateOrInstall } from './installer/updater';
 import { ServerPath } from './serverPath';
+import { SingleInstanceTimeout } from './utils';
 import { config } from './vscodeUtils';
 
 const brand = `Terraform AzApi Provider`;
@@ -10,6 +13,7 @@ export let terraformStatus: vscode.StatusBarItem;
 
 let reporter: TelemetryReporter;
 let clientHandler: ClientHandler;
+const languageServerUpdater = new SingleInstanceTimeout();
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const manifest = context.extension.packageJSON;
@@ -19,6 +23,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   const lsPath = new ServerPath(context);
   clientHandler = new ClientHandler(lsPath, outputChannel, reporter);
+
+  if (config('azapi').has('languageServer.requiredVersion')) {
+    const langServerVer = config('azapi').get('languageServer.requiredVersion', DEFAULT_LS_VERSION);
+    if (!isValidVersionString(langServerVer)) {
+      vscode.window.showWarningMessage(
+        `The Terraform Language Server Version string '${langServerVer}' is not a valid semantic version and will be ignored.`,
+      );
+    }
+  }
 
   // Subscriptions
   context.subscriptions.push(
@@ -31,7 +44,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           vscode.ConfigurationTarget.Global,
         );
       }
-      startLanguageServer();
+      await updateLanguageServer(manifest.version, lsPath);
     }),
     vscode.commands.registerCommand('azapi.disableLanguageServer', async () => {
       if (enabled()) {
@@ -42,10 +55,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           vscode.ConfigurationTarget.Global,
         );
       }
-      stopLanguageServer();
+      languageServerUpdater.clear();
+      return clientHandler.stopClient();
     }),
     vscode.workspace.onDidChangeConfiguration(async (event: vscode.ConfigurationChangeEvent) => {
-      if (event.affectsConfiguration('terraform') || event.affectsConfiguration('azapi-lsp')) {
+      if (event.affectsConfiguration('azapi')) {
         const reloadMsg = 'Reload VSCode window to apply language server changes';
         const selected = await vscode.window.showInformationMessage(reloadMsg, 'Reload');
         if (selected === 'Reload') {
@@ -56,7 +70,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   );
 
   if (enabled()) {
-    startLanguageServer();
+    try {
+      await updateLanguageServer(manifest.version, lsPath);
+    } catch (error) {
+      if (error instanceof Error) {
+        reporter.sendTelemetryException(error);
+      }
+    }
   }
 }
 
@@ -68,24 +88,33 @@ export async function deactivate(): Promise<void> {
   return clientHandler.stopClient();
 }
 
-async function startLanguageServer() {
-  try {
-    await clientHandler.startClient();
-    vscode.commands.executeCommand('setContext', 'terraform.showTreeViews', true);
-  } catch (error) {
-    console.log(error); // for test failure reporting
-    if (error instanceof Error) {
-      vscode.window.showErrorMessage(error instanceof Error ? error.message : error);
-    } else if (typeof error === 'string') {
-      vscode.window.showErrorMessage(error);
-    }
+async function updateLanguageServer(extVersion: string, lsPath: ServerPath, scheduled = false) {
+  if (config('extensions').get<boolean>('autoCheckUpdates', true) === true) {
+    console.log('Scheduling check for language server updates...');
+    const hour = 1000 * 60 * 60;
+    languageServerUpdater.timeout(function () {
+      updateLanguageServer(extVersion, lsPath, true);
+    }, 24 * hour);
   }
-}
 
-async function stopLanguageServer() {
+  if (lsPath.hasCustomBinPath()) {
+    // skip install check if user has specified a custom path to the LS
+    // with custom paths we *need* to start the lang client always
+    await clientHandler.startClient();
+    return;
+  }
+
   try {
-    await clientHandler.stopClient();
-    vscode.commands.executeCommand('setContext', 'terraform.showTreeViews', false);
+    await updateOrInstall(config('azapi').get('languageServer.requiredVersion', DEFAULT_LS_VERSION), lsPath, reporter);
+
+    // On scheduled checks, we download to stg and do not replace prod path
+    // So we *do not* need to stop or start the LS
+    if (scheduled) {
+      return;
+    }
+
+    // On fresh starts we *need* to start the lang client always
+    await clientHandler.startClient();
   } catch (error) {
     console.log(error); // for test failure reporting
     if (error instanceof Error) {
@@ -97,5 +126,5 @@ async function stopLanguageServer() {
 }
 
 function enabled(): boolean {
-  return config('azapi').get('languageServer.external', false);
+  return config('azapi').get('languageServer.external', true);
 }

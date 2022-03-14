@@ -5,9 +5,13 @@
       "name": "Launch Client",
       "type": "extensionHost",
       "request": "launch",
-      "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
-      "outFiles": ["${workspaceFolder}/out/**/*.js"],
-      "preLaunchTask": "npm: watch"
+      "runtimeExecutable": "${execPath}",
+      "args": ["--extensionDevelopmentPath=${workspaceRoot}"],
+      "outFiles": ["${workspaceRoot}/out/**/*.js"],
+      "preLaunchTask": {
+        "type": "npm",
+        "script": "watch"
+      }
     },
     {
       "name": "Run Extension Tests",
