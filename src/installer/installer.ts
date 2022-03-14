@@ -63,7 +63,7 @@ export async function installTerraformLS(
       progress.report({ increment: 30 });
 
       // unzip
-      const fileExtension = os === "windows" ? ".exe" : "";
+      const fileExtension = os === 'windows' ? '.exe' : '';
       const unversionedName = path.resolve(installPath, `azapi-lsp${fileExtension}`);
       progress.report({ increment: 20 });
       const fileReadStream = fs.createReadStream(zipfile);
