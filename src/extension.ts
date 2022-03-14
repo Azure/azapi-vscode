@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import TelemetryReporter from 'vscode-extension-telemetry';
+import TelemetryReporter from '@vscode/extension-telemetry';
 import { ClientHandler } from './clientHandler';
 import { DEFAULT_LS_VERSION, isValidVersionString } from './installer/detector';
 import { updateOrInstall } from './installer/updater';

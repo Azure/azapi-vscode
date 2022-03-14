@@ -19,7 +19,7 @@ export async function sleep(ms: number): Promise<void> {
 // timer can be running at a time. Attempts to add a new timeout silently fail.
 export class SingleInstanceTimeout {
   private timerLock = false;
-  private timerId: number | null = null;
+  private timerId: NodeJS.Timeout | null = null;
 
   public timeout(fn: (...args: any[]) => void, delay: number, ...args: any[]): void {
     if (!this.timerLock) {

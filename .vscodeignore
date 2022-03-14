@@ -3,7 +3,6 @@
 .vscode-test
 build/
 lsp/
-node_modules/
 src/
 **/__mocks__
 out/*.test.*

@@ -1,6 +1,6 @@
 import * as semver from 'semver';
 import * as vscode from 'vscode';
-import TelemetryReporter from 'vscode-extension-telemetry';
+import TelemetryReporter from '@vscode/extension-telemetry';
 import { ServerPath } from '../serverPath';
 import { Release } from '../types';
 import { config } from '../vscodeUtils';

@@ -4,4 +4,5 @@ export const reporter = {
   sendTelemetryErrorEvent: jest.fn(),
   sendTelemetryException: jest.fn(),
   dispose: jest.fn(),
+  telemetryLevel: 'all' as any,
 };

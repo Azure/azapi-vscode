@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import TelemetryReporter from 'vscode-extension-telemetry';
+import TelemetryReporter from '@vscode/extension-telemetry';
 import { pathExists } from './detector';
 import * as fs from 'fs';
 import * as unzip from 'unzip-stream';
@@ -63,7 +63,8 @@ export async function installTerraformLS(
       progress.report({ increment: 30 });
 
       // unzip
-      const unversionedName = path.resolve(installPath, `azapi-lsp.exe`);
+      const fileExtension = os === "windows" ? ".exe" : "";
+      const unversionedName = path.resolve(installPath, `azapi-lsp${fileExtension}`);
       progress.report({ increment: 20 });
       const fileReadStream = fs.createReadStream(zipfile);
       const unzipPipe = unzip.Extract({ path: installPath });
