@@ -112,20 +112,17 @@ async function run(platform: string, architecture: string) {
 
   // unzip
   const fileExtension = os === "windows" ? ".exe" : "";
-  const versionedName = path.resolve(installPath, `azapi-lsp_${release.version}${fileExtension}`);
-  const unversionedName = path.resolve(installPath, `azapi-lsp${fileExtension}`);
+  const binaryName = path.resolve(installPath, `azapi-lsp${fileExtension}`);
   const fileReadStream = fs.createReadStream(zipfile);
   const unzipPipe = unzip.Extract({ path: installPath });
   fileReadStream.pipe(unzipPipe);
   await new Promise<void>((resolve, reject) => {
     unzipPipe.on('close', () => {
-      fs.chmodSync(versionedName, '755');
+      fs.chmodSync(binaryName, '755');
       return resolve();
     });
     fileReadStream.on('error', reject);
   });
-
-  fs.rename(versionedName, unversionedName, function() {})
 
   fs.rmSync(zipfile, {
     recursive: true,

@@ -25,7 +25,7 @@ We use telemetry to send error reports to our team, so we can respond more effec
 See the [CHANGELOG](https://github.com/Azure/azapi-vscode/blob/develop/CHANGELOG.md) for more information.
 
 ## Local development
-0. Prerequisites: golang >1.16, node 14.X, npm 6.X
+0. Prerequisites: golang >1.16, node 16.X, npm 8.X
 1. Clone [Terraform AzApi Provider Language Server](https://github.com/Azure/azapi-lsp) to local
 2. Run `go install` under project folder
 3. Add the following configuration to vscode setting file.
