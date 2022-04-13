@@ -43,3 +43,7 @@ See the [CHANGELOG](https://github.com/Azure/azapi-vscode/blob/develop/CHANGELOG
 5. Run `npm install` to download dependencies
 6. Run `code .` to open this project in VSCode
 7. Press `F5`, it will open a new VSCode Window, you can test its features in it.
+
+## Credits
+
+- [vscode-terraform](https://github.com/hashicorp/vscode-terraform) extension: This `azapi-vscode` is developed based on `vscode-terraform`.
