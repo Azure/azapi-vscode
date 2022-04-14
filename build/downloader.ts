@@ -48,7 +48,6 @@ function getArch(arch: string) {
 async function getRelease(): Promise<Release> {
     const response = await axios.get('https://api.github.com/repos/Azure/azapi-lsp/releases', {
       headers: {
-        Authorization: 'token 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',
       },
     });
     if (response.status == 200 && response.data.length != 0) {
