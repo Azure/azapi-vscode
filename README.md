@@ -46,4 +46,4 @@ See the [CHANGELOG](https://github.com/Azure/azapi-vscode/blob/develop/CHANGELOG
 
 ## Credits
 
-- [vscode-terraform](https://github.com/hashicorp/vscode-terraform) extension: This `azapi-vscode` is developed based on `vscode-terraform`.
+We wish to thank HashiCorp for the use of some MPLv2-licensed code from their open source project [vscode-terraform](https://github.com/hashicorp/vscode-terraform).
