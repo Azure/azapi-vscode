@@ -3,7 +3,7 @@
   "name": "azapi",
   "displayName": "Terraform AzApi Provider",
   "description": "Terraform AzApi Provider language support for Visual Studio Code",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "publisher": "azapi-vscode",
   "appInsightsKey": "TODO",
   "license": "MPL-2.0",
