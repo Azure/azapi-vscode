@@ -13,7 +13,6 @@ interface Release {
   assets: Build[];
 }
 
-
 function getPlatform(platform: string) {
   if (platform === 'win32') {
     return 'windows';
@@ -44,26 +43,24 @@ function getArch(arch: string) {
   return arch;
 }
 
-
 async function getRelease(): Promise<Release> {
-    const response = await axios.get('https://api.github.com/repos/Azure/azapi-lsp/releases', {
-      headers: {
-      },
-    });
-    if (response.status == 200 && response.data.length != 0) {
-      const assets: Build[] = [];
-      for (const i in response.data[0].assets) {
-        assets.push({
-          name: response.data[0].assets[i].name,
-          downloadUrl: response.data[0].assets[i].browser_download_url,
-        });
-      }
-      return {
-        version: response.data[0].name,
-        assets: assets,
-      };
+  const response = await axios.get('https://api.github.com/repos/Azure/azapi-lsp/releases', {
+    headers: {},
+  });
+  if (response.status == 200 && response.data.length != 0) {
+    const assets: Build[] = [];
+    for (const i in response.data[0].assets) {
+      assets.push({
+        name: response.data[0].assets[i].name,
+        downloadUrl: response.data[0].assets[i].browser_download_url,
+      });
     }
-  throw new Error("no valid release")
+    return {
+      version: response.data[0].name,
+      assets: assets,
+    };
+  }
+  throw new Error('no valid release');
 }
 
 async function run(platform: string, architecture: string) {
@@ -79,7 +76,7 @@ async function run(platform: string, architecture: string) {
 
   fs.mkdirSync(installPath);
 
-  const release = await getRelease()
+  const release = await getRelease();
 
   const os = getPlatform(platform);
   const arch = getArch(architecture);
@@ -95,8 +92,7 @@ async function run(platform: string, architecture: string) {
     throw new Error(`Install error: no matching azapi-lsp binary for ${os}/${arch}`);
   }
 
-  console.log(build)
-
+  console.log(build);
 
   // download zip
   const zipfile = path.resolve(installPath, `azapi-lsp_${release.version}.zip`);
@@ -110,7 +106,7 @@ async function run(platform: string, architecture: string) {
   });
 
   // unzip
-  const fileExtension = os === "windows" ? ".exe" : "";
+  const fileExtension = os === 'windows' ? '.exe' : '';
   const binaryName = path.resolve(installPath, `azapi-lsp${fileExtension}`);
   const fileReadStream = fs.createReadStream(zipfile);
   const unzipPipe = unzip.Extract({ path: installPath });

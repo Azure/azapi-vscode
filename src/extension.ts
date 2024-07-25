@@ -44,6 +44,53 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       }
       stopLanguageServer();
     }),
+    vscode.workspace.onDidChangeTextDocument(async (event: vscode.TextDocumentChangeEvent) => {
+      if (event.document.languageId !== 'terraform') {
+        return;
+      }
+
+      let lsClient = clientHandler.getClient();
+      if (!lsClient) {
+        return;
+      }
+
+      const editor = vscode.window.activeTextEditor;
+      if (
+        event.reason !== vscode.TextDocumentChangeReason.Redo &&
+        event.reason !== vscode.TextDocumentChangeReason.Undo &&
+        event.document === editor?.document &&
+        event.contentChanges.length === 1
+      ) {
+        const contentChange = event.contentChanges[0];
+
+        // Ignore deletions and trivial changes
+        if (contentChange.text.length < 2 || isEmptyOrWhitespace(contentChange.text)) {
+          return;
+        }
+
+        const clipboardText = await vscode.env.clipboard.readText();
+
+        if (contentChange.text !== clipboardText) {
+          return;
+        }
+
+        try {
+          const result: any = await lsClient.client.sendRequest('workspace/executeCommand', {
+            command: 'azapi.convertJsonToAzapi',
+            arguments: [`jsonContent=${clipboardText}`],
+          });
+
+          await editor.edit((editBuilder) => {
+            const startPoint = contentChange.range.start;
+            const endPoint = editor.selection.active;
+            const replaceRange = new vscode.Range(startPoint, endPoint);
+            editBuilder.replace(replaceRange, result.hclcontent);
+          });
+        } catch (error) {
+          outputChannel.appendLine(`Error converting JSON to AzApi: ${error}`);
+        }
+      }
+    }),
     vscode.workspace.onDidChangeConfiguration(async (event: vscode.ConfigurationChangeEvent) => {
       if (event.affectsConfiguration('terraform') || event.affectsConfiguration('azapi-lsp')) {
         const reloadMsg = 'Reload VSCode window to apply language server changes';
@@ -98,4 +145,8 @@ async function stopLanguageServer() {
 
 function enabled(): boolean {
   return config('azapi').get('languageServer.external', false);
+}
+
+function isEmptyOrWhitespace(s: string): boolean {
+  return /^\s*$/.test(s);
 }
