@@ -49,7 +49,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         return;
       }
 
-      let lsClient = clientHandler.getClient();
+      const lsClient = clientHandler.getClient();
       if (!lsClient) {
         return;
       }
