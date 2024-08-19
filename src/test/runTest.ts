@@ -1,6 +1,6 @@
 import * as path from 'path';
-import { runTests } from 'vscode-test';
-import { TestOptions } from 'vscode-test/out/runTest';
+import { runTests } from '@vscode/test-electron';
+import { TestOptions } from '@vscode/test-electron/out/runTest';
 
 async function main(): Promise<void> {
   // The folder containing the Extension Manifest package.json
