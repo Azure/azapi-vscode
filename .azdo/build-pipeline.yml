@@ -96,32 +96,32 @@ stages:
               packageType: "sdk"
               version: "6.x"
 
-          # - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
-          #   inputs:
-          #     ConnectedServiceName: '$(ESRPServiceConnectionName)'
-          #     AppRegistrationClientId: '$(ESRPAppClientId)'
-          #     AppRegistrationTenantId: '$(ESRPAppTenantId)'
-          #     AuthAKVName: '$(ESRPKVName)'
-          #     AuthCertName: '$(ESRPAuthCertName)'
-          #     AuthSignCertName: '$(ESRPSignCertName)'
-          #     Pattern: 'extension.signature.p7s'
-          #     FolderPath: './output'
-          #     signConfigType: inlineSignParams
-          #     inlineOperation: |
-          #       [
-          #         {
-          #           "keyCode": "CP-401405",
-          #           "operationSetCode": "VSCodePublisherSign",
-          #           "parameters" : [],
-          #           "toolName": "sign",
-          #           "toolVersion": "1.0"
-          #         }
-          #       ]
-          #     SessionTimeout: 90
-          #     MaxConcurrency: 25
-          #     MaxRetryAttempts: 5
-          #     PendingAnalysisWaitTimeoutMinutes: 5
-          #   displayName: 'Sign extension'
+          - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
+            inputs:
+              ConnectedServiceName: '$(ESRPServiceConnectionName)'
+              AppRegistrationClientId: '$(ESRPAppClientId)'
+              AppRegistrationTenantId: '$(ESRPAppTenantId)'
+              AuthAKVName: '$(ESRPKVName)'
+              AuthCertName: '$(ESRPAuthCertName)'
+              AuthSignCertName: '$(ESRPSignCertName)'
+              Pattern: 'extension.signature.p7s'
+              FolderPath: './output'
+              signConfigType: inlineSignParams
+              inlineOperation: |
+                [
+                  {
+                    "keyCode": "CP-401405",
+                    "operationSetCode": "VSCodePublisherSign",
+                    "parameters" : [],
+                    "toolName": "sign",
+                    "toolVersion": "1.0"
+                  }
+                ]
+              SessionTimeout: 90
+              MaxConcurrency: 25
+              MaxRetryAttempts: 5
+              PendingAnalysisWaitTimeoutMinutes: 5
+            displayName: 'Sign extension'
 
           - script: mkdir -p ./dist && zip -j ./dist/$(vsce_target).zip ./output/*
             displayName: 'Package for uploading'
