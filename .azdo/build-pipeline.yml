@@ -132,7 +132,7 @@ stages:
             displayName: "Publish Pipline Artifact"
             inputs:
               targetPath: "$(system.defaultWorkingDirectory)/dist"
-              artifactName: 'pipeline'
+              publishLocation: 'pipeline'
 
   - stage: Release
     jobs:
