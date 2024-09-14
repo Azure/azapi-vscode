@@ -149,7 +149,7 @@ stages:
               repositoryName: "Azure/azapi-vscode"
               action: "create"
               target: ${{ parameters.azapiRef }}
-              tagPattern: '^v\d+\.\d+\.\d+'
+              tagPattern: '^v\d+\.\d+\.\d+.*'
               assets: "./dist/*.zip"
               isDraft: true
               addChangeLog: false
