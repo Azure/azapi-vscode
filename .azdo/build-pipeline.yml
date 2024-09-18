@@ -64,7 +64,7 @@ stages:
             env:
               npm_config_arch: $(npm_config_arch)
 
-          - script: npm run package -- --target=$(vsce_target)
+          - script: npm run package -- --target=$(vsce_target) --pre-release
             displayName: 'Package VSIX'
             env:
               ls_target: $(ls_target)

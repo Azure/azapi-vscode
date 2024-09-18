@@ -10,6 +10,8 @@ The Terraform AzApi Provider Visual Studio Code (VS Code) extension adds editing
 - Completion of allowed azure resource properties when input `body` in `azapi` resources, limitation: it only works when use `jsonencode` function to build the JSON
 - Show hint when hover on `azapi` resources
 - Diagnostics to indicate schema errors as you type
+- Convert resource JSON to azapi configuration.
+- Convert ARM template to azapi configuration.
 
 ## Demo
 
@@ -28,6 +30,16 @@ Completion of required properties for any discriminated objects.
 Show hint when hover on `azapi` resources and diagnostics to indicate schema errors as you type.
 
 ![hint message being displayed when hover on an azapi property](/images/hovers.gif)
+
+Paste resource JSON to the terraform configuration, it will convert to azapi configuration.
+
+![convert resource JSON to azapi configuration](/images/paste-json-as-config.png)
+
+
+Paste ARM template to the terraform configuration, it will convert to azapi configuration.
+
+![convert ARM template to azapi configuration](/images/paste-arm-templates-as-config.png)
+
 
 ## Configuration
 
