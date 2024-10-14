@@ -70,7 +70,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
         const clipboardText = await vscode.env.clipboard.readText();
 
-        if (contentChange.text !== clipboardText) {
+        if (!areEqualIgnoringWhitespace(contentChange.text, clipboardText)) {
           return;
         }
 
@@ -149,4 +149,12 @@ function enabled(): boolean {
 
 function isEmptyOrWhitespace(s: string): boolean {
   return /^\s*$/.test(s);
+}
+
+function areEqualIgnoringWhitespace(a: string, b: string): boolean {
+  return removeWhitespace(a) === removeWhitespace(b);
+}
+
+function removeWhitespace(s: string): string {
+  return s.replace(/\s*/g, '');
 }
