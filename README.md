@@ -40,6 +40,10 @@ Paste ARM template to the terraform configuration, it will convert to azapi conf
 
 ![convert ARM template to azapi configuration](/images/paste-arm-templates-as-config.png)
 
+Migrate from AzureRM provider to AzApi provider. More details can be found in [Guide to migrate AzureRM resources to AzAPi in Module](https://github.com/Azure/azapi-lsp/blob/main/docs/migrate_to_azapi_in_module_guide.md)
+
+![migrate from AzureRM provider to AzApi provider](/images/migrate-to-azapi-provider.png)
+
 
 ## Configuration
 
