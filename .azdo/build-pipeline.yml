@@ -150,6 +150,6 @@ stages:
               action: "create"
               target: ${{ parameters.azapiRef }}
               tagPattern: '^v\d+\.\d+\.\d+.*'
-              assets: "./dist/*.zip"
+              assets: "./dist/*/*.zip"
               isDraft: true
               addChangeLog: false
