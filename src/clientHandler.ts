@@ -1,6 +1,6 @@
 import ShortUniqueId from 'short-unique-id';
 import * as vscode from 'vscode';
-import TelemetryReporter from 'vscode-extension-telemetry';
+import TelemetryReporter from '@vscode/extension-telemetry';
 import {
   DocumentSelector,
   Executable,
@@ -33,9 +33,6 @@ export class ClientHandler {
     private outputChannel: vscode.OutputChannel,
     private reporter: TelemetryReporter,
   ) {
-    if (lsPath.hasCustomBinPath()) {
-      this.reporter.sendTelemetryEvent('usePathToBinary');
-    }
   }
 
   public async startClient(): Promise<vscode.Disposable> {
@@ -46,7 +43,9 @@ export class ClientHandler {
 
     await this.tfClient.client.onReady();
 
-    this.reporter.sendTelemetryEvent('startClient');
+    this.reporter.sendRawTelemetryEvent('startClient', {
+      usePathToBinary: `${this.lsPath.hasCustomBinPath()}`,
+    });
 
     const initializeResult = this.tfClient.client.initializeResult;
     if (initializeResult !== undefined) {
@@ -69,7 +68,9 @@ export class ClientHandler {
       documentSelector: documentSelector,
       initializationOptions: initializationOptions,
       initializationFailedHandler: (error) => {
-        this.reporter.sendTelemetryException(error);
+        this.reporter.sendTelemetryErrorEvent('initializationFailed', {
+          err : `${error}`,
+        });
         return false;
       },
       outputChannel: this.outputChannel,
@@ -86,7 +87,7 @@ export class ClientHandler {
     client.onDidChangeState((event) => {
       console.log(`Client: ${State[event.oldState]} --> ${State[event.newState]}`);
       if (event.newState === State.Stopped) {
-        this.reporter.sendTelemetryEvent('stopClient');
+        this.reporter.sendRawTelemetryEvent('stopClient');
       }
     });
 

@@ -1,4 +1,4 @@
-import TelemetryReporter from 'vscode-extension-telemetry';
+import TelemetryReporter from '@vscode/extension-telemetry';
 import { BaseLanguageClient, ClientCapabilities, StaticFeature } from 'vscode-languageclient';
 
 import { ExperimentalClientCapabilities } from './types';
@@ -8,7 +8,7 @@ const TELEMETRY_VERSION = 1;
 type TelemetryEvent = {
   v: number;
   name: string;
-  properties: { [key: string]: unknown };
+  properties: { [key: string]: string };
 };
 
 export class TelemetryFeature implements StaticFeature {
@@ -20,6 +20,7 @@ export class TelemetryFeature implements StaticFeature {
       }
 
       reporter.sendRawTelemetryEvent(event.name, event.properties);
+      console.log('Telemetry event:', event);
     });
   }
 

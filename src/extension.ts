@@ -1,21 +1,25 @@
 import * as vscode from 'vscode';
-import TelemetryReporter from 'vscode-extension-telemetry';
+import TelemetryReporter from '@vscode/extension-telemetry';
 import { ClientHandler } from './clientHandler';
 import { ServerPath } from './serverPath';
 import { config } from './vscodeUtils';
 
 const brand = `Terraform AzApi Provider`;
 const outputChannel = vscode.window.createOutputChannel(brand);
-export let terraformStatus: vscode.StatusBarItem;
 
 let reporter: TelemetryReporter;
 let clientHandler: ClientHandler;
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const manifest = context.extension.packageJSON;
-  terraformStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
-  reporter = new TelemetryReporter(context.extension.id, manifest.version, manifest.appInsightsKey);
+  reporter = new TelemetryReporter(manifest.appInsightsConnectionString);
   context.subscriptions.push(reporter);
+
+  reporter.sendRawTelemetryEvent('activated', {
+    activationEvents: manifest.activationEvents,
+    main: manifest.main,
+    version: manifest.version,
+  });
 
   const lsPath = new ServerPath(context);
   clientHandler = new ClientHandler(lsPath, outputChannel, reporter);
@@ -24,23 +28,17 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   context.subscriptions.push(
     vscode.commands.registerCommand('azapi.enableLanguageServer', async () => {
       if (!enabled()) {
-        const current = config('azapi').get('languageServer');
-        await config('azapi').update(
-          'languageServer',
-          Object.assign(current, { external: true }),
-          vscode.ConfigurationTarget.Global,
-        );
+        const currentConfig: any = config('azapi').get('languageServer');
+        currentConfig.external = true;
+        await config('azapi').update(   'languageServer',  currentConfig,vscode.ConfigurationTarget.Global);
       }
       startLanguageServer();
     }),
     vscode.commands.registerCommand('azapi.disableLanguageServer', async () => {
       if (enabled()) {
-        const current = config('azapi').get('languageServer');
-        await config('azapi').update(
-          'languageServer',
-          Object.assign(current, { external: false }),
-          vscode.ConfigurationTarget.Global,
-        );
+        const currentConfig: any = config('azapi').get('languageServer');
+        currentConfig.external = false;
+        await config('azapi').update(   'languageServer',  currentConfig,vscode.ConfigurationTarget.Global);
       }
       stopLanguageServer();
     }),
@@ -92,7 +90,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       }
     }),
     vscode.workspace.onDidChangeConfiguration(async (event: vscode.ConfigurationChangeEvent) => {
-      if (event.affectsConfiguration('terraform') || event.affectsConfiguration('azapi-lsp')) {
+      if (event.affectsConfiguration('azapi')) {
         const reloadMsg = 'Reload VSCode window to apply language server changes';
         const selected = await vscode.window.showInformationMessage(reloadMsg, 'Reload');
         if (selected === 'Reload') {
@@ -108,6 +106,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 }
 
 export async function deactivate(): Promise<void> {
+  reporter.sendRawTelemetryEvent('deactivated');
   if (clientHandler === undefined) {
     return;
   }
@@ -118,9 +117,11 @@ export async function deactivate(): Promise<void> {
 async function startLanguageServer() {
   try {
     await clientHandler.startClient();
-    vscode.commands.executeCommand('setContext', 'terraform.showTreeViews', true);
   } catch (error) {
     console.log(error); // for test failure reporting
+    reporter.sendTelemetryErrorEvent("startLanguageServer", {
+      err : `${error}`,
+    });
     if (error instanceof Error) {
       vscode.window.showErrorMessage(error instanceof Error ? error.message : error);
     } else if (typeof error === 'string') {
@@ -132,9 +133,11 @@ async function startLanguageServer() {
 async function stopLanguageServer() {
   try {
     await clientHandler.stopClient();
-    vscode.commands.executeCommand('setContext', 'terraform.showTreeViews', false);
   } catch (error) {
     console.log(error); // for test failure reporting
+    reporter.sendTelemetryErrorEvent("stopLanguageServer", {
+      err : `${error}`,
+    });
     if (error instanceof Error) {
       vscode.window.showErrorMessage(error instanceof Error ? error.message : error);
     } else if (typeof error === 'string') {
@@ -144,7 +147,7 @@ async function stopLanguageServer() {
 }
 
 function enabled(): boolean {
-  return config('azapi').get('languageServer.external', false);
+  return config('azapi').get('languageServer.external', true);
 }
 
 function isEmptyOrWhitespace(s: string): boolean {

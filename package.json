@@ -5,13 +5,11 @@
   "description": "Terraform AzApi Provider language support for Visual Studio Code",
   "version": "2.1.0",
   "publisher": "azapi-vscode",
-  "appInsightsKey": "TODO",
+  "appInsightsConnectionString": "0c6ae279ed8443289764825290e4f9e2-1a736e7c-1324-4338-be46-fc2a58ae4d14-7255",
   "license": "MPL-2.0",
   "preview": false,
   "private": true,
   "engines": {
-    "npm": "~8.X",
-    "node": "~16.X",
     "vscode": "^1.82.0"
   },
   "langServer": {
@@ -148,11 +146,11 @@
     "preview": "ts-node ./build/preview.ts"
   },
   "dependencies": {
+    "@vscode/extension-telemetry": "^0.9.7",
     "@vscode/test-electron": "^2.4.1",
     "fs": "0.0.1-security",
     "openpgp": "^4.10.10",
     "short-unique-id": "^3.2.3",
-    "vscode-extension-telemetry": "^0.4.2",
     "vscode-languageclient": "^7.0.0",
     "vscode-uri": "^3.0.2",
     "which": "^2.0.2"
@@ -171,7 +169,8 @@
     "@types/yauzl": "^2.9.1",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
-    "axios": "^0.24.0",
+    "@vscode/vsce": "^3.2.0",
+    "axios": "^1.7.7",
     "chai": "^4.3.4",
     "esbuild": "^0.14.11",
     "eslint": "^7.32.0",
@@ -186,7 +185,6 @@
     "ts-jest": "^27.1.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.4",
-    "unzip-stream": "^0.3.1",
-    "vsce": "^2.6.3"
+    "unzip-stream": "^0.3.1"
   }
 }
