@@ -31,16 +31,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         const currentConfig: any = config('azapi').get('languageServer');
         currentConfig.external = true;
         await config('azapi').update('languageServer', currentConfig, vscode.ConfigurationTarget.Global);
+        startLanguageServer();
       }
-      startLanguageServer();
     }),
     vscode.commands.registerCommand('azapi.disableLanguageServer', async () => {
       if (enabled()) {
         const currentConfig: any = config('azapi').get('languageServer');
         currentConfig.external = false;
         await config('azapi').update('languageServer', currentConfig, vscode.ConfigurationTarget.Global);
+        stopLanguageServer();
       }
-      stopLanguageServer();
     }),
     vscode.workspace.onDidChangeTextDocument(async (event: vscode.TextDocumentChangeEvent) => {
       if (event.document.languageId !== 'terraform') {

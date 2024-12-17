@@ -178,7 +178,7 @@
     "eslint-plugin-prettier": "^3.4.1",
     "glob": "^7.1.6",
     "jest": "^27.4.3",
-    "mocha": "^9.2.2",
+    "mocha": "^11.0.1",
     "prettier": "^2.3.2",
     "semver": "^7.3.5",
     "temp": "^0.9.4",

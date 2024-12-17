@@ -120,7 +120,6 @@ export class ClientHandler {
     if (this.tfClient?.client === undefined) {
       return;
     }
-
     await this.tfClient.client.stop();
     console.log('Client stopped');
   }
