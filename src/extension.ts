@@ -30,7 +30,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       if (!enabled()) {
         const currentConfig: any = config('azapi').get('languageServer');
         currentConfig.external = true;
-        await config('azapi').update(   'languageServer',  currentConfig,vscode.ConfigurationTarget.Global);
+        await config('azapi').update('languageServer', currentConfig, vscode.ConfigurationTarget.Global);
       }
       startLanguageServer();
     }),
@@ -38,7 +38,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       if (enabled()) {
         const currentConfig: any = config('azapi').get('languageServer');
         currentConfig.external = false;
-        await config('azapi').update(   'languageServer',  currentConfig,vscode.ConfigurationTarget.Global);
+        await config('azapi').update('languageServer', currentConfig, vscode.ConfigurationTarget.Global);
       }
       stopLanguageServer();
     }),
@@ -119,8 +119,8 @@ async function startLanguageServer() {
     await clientHandler.startClient();
   } catch (error) {
     console.log(error); // for test failure reporting
-    reporter.sendTelemetryErrorEvent("startLanguageServer", {
-      err : `${error}`,
+    reporter.sendTelemetryErrorEvent('startLanguageServer', {
+      err: `${error}`,
     });
     if (error instanceof Error) {
       vscode.window.showErrorMessage(error instanceof Error ? error.message : error);
@@ -135,8 +135,8 @@ async function stopLanguageServer() {
     await clientHandler.stopClient();
   } catch (error) {
     console.log(error); // for test failure reporting
-    reporter.sendTelemetryErrorEvent("stopLanguageServer", {
-      err : `${error}`,
+    reporter.sendTelemetryErrorEvent('stopLanguageServer', {
+      err: `${error}`,
     });
     if (error instanceof Error) {
       vscode.window.showErrorMessage(error instanceof Error ? error.message : error);

@@ -32,8 +32,7 @@ export class ClientHandler {
     private lsPath: ServerPath,
     private outputChannel: vscode.OutputChannel,
     private reporter: TelemetryReporter,
-  ) {
-  }
+  ) {}
 
   public async startClient(): Promise<vscode.Disposable> {
     console.log('Starting client');
@@ -69,7 +68,7 @@ export class ClientHandler {
       initializationOptions: initializationOptions,
       initializationFailedHandler: (error) => {
         this.reporter.sendTelemetryErrorEvent('initializationFailed', {
-          err : `${error}`,
+          err: `${error}`,
         });
         return false;
       },
