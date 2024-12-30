@@ -56,7 +56,7 @@ stages:
         steps:
           - task: NodeTool@0
             inputs:
-              versionSpec: '16.x'
+              versionSpec: '23.x'
             displayName: 'Install Node.js'
 
           - script: npm ci
@@ -74,11 +74,6 @@ stages:
             env:
               VERSION: ${{ parameters.version }}
               vsce_target: $(vsce_target)
-
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '20.x'
-            displayName: 'Install Node.js'
 
           - script: npx @vscode/vsce@latest generate-manifest -i ./output/extension.vsix -o ./output/extension.manifest
             displayName: 'Generate extension manifest'
