@@ -25,10 +25,6 @@ stages:
               vsce_target: win32-x64
               ls_target: windows_amd64
               npm_config_arch: x64
-            win32-ia32:
-              vsce_target: win32-ia32
-              ls_target: windows_386
-              npm_config_arch: ia32
             win32-arm64:
               vsce_target: win32-arm64
               ls_target: windows_arm64
