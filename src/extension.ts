@@ -3,6 +3,7 @@ import TelemetryReporter from '@vscode/extension-telemetry';
 import { ClientHandler } from './clientHandler';
 import { ServerPath } from './serverPath';
 import { config } from './vscodeUtils';
+import { ShouldShowSurvey, ShowSurvey } from './survey';
 
 const brand = `Terraform AzApi Provider`;
 const outputChannel = vscode.window.createOutputChannel(brand);
@@ -41,6 +42,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         await config('azapi').update('languageServer', currentConfig, vscode.ConfigurationTarget.Global);
         stopLanguageServer();
       }
+    }),
+    vscode.commands.registerCommand('azapi.showSurvey', async () => {
+      ShowSurvey();
     }),
     vscode.workspace.onDidChangeTextDocument(async (event: vscode.TextDocumentChangeEvent) => {
       if (event.document.languageId !== 'terraform') {
@@ -90,7 +94,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       }
     }),
     vscode.workspace.onDidChangeConfiguration(async (event: vscode.ConfigurationChangeEvent) => {
-      if (event.affectsConfiguration('azapi')) {
+      if (event.affectsConfiguration('azapi.languageServer')) {
         const reloadMsg = 'Reload VSCode window to apply language server changes';
         const selected = await vscode.window.showInformationMessage(reloadMsg, 'Reload');
         if (selected === 'Reload') {
@@ -102,6 +106,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   if (enabled()) {
     startLanguageServer();
+  }
+
+  if (await ShouldShowSurvey()) {
+    ShowSurvey();
   }
 }
 
