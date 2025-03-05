@@ -67,6 +67,18 @@
       "type": "object",
       "title": "Terraform",
       "properties": {
+        "azapi.survey": {
+          "surveyPromptDate": {
+            "type": "string",
+            "default": "none",
+            "description": "Date of the AzAPI survey will be prompted to the user"
+          },
+          "surveyPromptIgnoredCount": {
+            "type": "number",
+            "default": 0,
+            "description": "Number of times the survey prompt has been ignored"
+          }
+        },
         "azapi.languageServer": {
           "type": "object",
           "description": "Language Server settings",
@@ -121,6 +133,10 @@
       {
         "command": "azapi.disableLanguageServer",
         "title": "Terraform AzApi Provider: Disable Language Server"
+      },
+      {
+        "command": "azapi.showSurvey",
+        "title": "Terraform AzApi Provider: Show Survey"
       }
     ],
     "menus": {},
