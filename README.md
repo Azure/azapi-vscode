@@ -2,6 +2,13 @@
 
 The Terraform AzApi Provider Visual Studio Code (VS Code) extension adds editing features like completion/hover/diagnositics for [terraform-provider-azapi](https://github.com/Azure/terraform-provider-azapi) Terraform files using the [Terraform AzApi Provider Language Server](https://github.com/Azure/azapi-lsp).
 
+## ⚠️ Notice
+
+⚠️ This project has been deprecated and archived. All the features of this project have been merged into the [vscode-azureterraform](https://github.com/Azure/vscode-azureterraform).
+
+Please use the [Microsoft Terraform extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureterraform) instead, which includes all the features of this extension and more.
+
+
 ## Features
 
 - Manages the [Terraform AzApi Provider Language Server](https://github.com/Azure/azapi-lsp), exposing its features:
