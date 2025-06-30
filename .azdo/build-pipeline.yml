@@ -1,5 +1,8 @@
 trigger: none
 
+variables:
+  - group: AME ESRP Variable Group
+
 parameters:
   - name: version
     displayName: 'Release Version (e.g. v0.1.0)'
